@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
+import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,27 +14,13 @@ class HomePage extends StatelessWidget {
           fontSize: 24,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Image.asset('/assets/리자몽.png'),
-                    Column(
-                      children: [
-                        CommonText(text: '피카츄'),
-                        CommonText(text: '가격 : 10,000원'),
-                      ],
-                    )
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            HomePageList(),
+          ],
+        ),
       ),
       floatingActionButton: Fab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
