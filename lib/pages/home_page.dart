@@ -15,21 +15,32 @@ class HomePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // 여기에 다른 위젯들을 추가할 수 있습니다
+          Expanded(
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return CommonText(text: 'text');
+              },
+            ),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Icon(
-          Icons.add,
-          size: 30,
-          weight: 800,
-        ),
-      ),
+      floatingActionButton: Fab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  FloatingActionButton Fab() {
+    return FloatingActionButton(
+      onPressed: () {},
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: Icon(
+        Icons.add,
+        size: 30,
+        weight: 800,
+      ),
     );
   }
 }
