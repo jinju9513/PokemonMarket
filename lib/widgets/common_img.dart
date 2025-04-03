@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 class CommonImg extends StatelessWidget {
   final String path;
   final double height;
+  final double width;
+
   final BoxFit boxFit;
 
   const CommonImg({
     super.key,
     required this.path,
     required this.height,
+    this.width = double.infinity,
     required this.boxFit,
   });
 
@@ -17,10 +20,10 @@ class CommonImg extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Image.asset(
-        'assets/1.png',
-        width: double.infinity,
-        height: 450,
-        fit: BoxFit.fitHeight,
+        path,
+        width: width,
+        height: height,
+        fit: boxFit,
       ),
     );
   }
