@@ -19,7 +19,17 @@ class HomePage extends StatelessWidget {
             child: ListView.builder(
               itemCount: 10,
               itemBuilder: (context, index) {
-                return CommonText(text: 'text');
+                return Row(
+                  children: [
+                    Image.asset('/assets/리자몽.png'),
+                    Column(
+                      children: [
+                        CommonText(text: '피카츄'),
+                        CommonText(text: '가격 : 10,000원'),
+                      ],
+                    )
+                  ],
+                );
               },
             ),
           ),
