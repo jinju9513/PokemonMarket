@@ -49,10 +49,10 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               //TODO: 삼항연산자 사용해서 상품여부 확인필요
-              const CommonText(
-                text: '상품이 없습니다.',
-                fontSize: 24,
-              ),
+              // const CommonText(
+              //   text: '상품이 없습니다.',
+              //   fontSize: 24,
+              // ),
               const HomePageList(),
             ],
           ),
