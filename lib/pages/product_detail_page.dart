@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/common_img.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
 import 'package:pokemon_market/widgets/product_detail_page/detail_list.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
+import 'package:pokemon_market/theme/theme_manager.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key});
@@ -12,33 +14,34 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  bool isDark = false;
+  final ThemeManager _themeManager = ThemeManager();
 
-  void toggleTheme() {
-    setState(() {
-      isDark = !isDark;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _themeManager.addListener(_onThemeChanged);
+  }
+
+  @override
+  void dispose() {
+    _themeManager.removeListener(_onThemeChanged);
+    super.dispose();
+  }
+
+  void _onThemeChanged(bool isDark) {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = _themeManager.isDarkMode;
+
     return Theme(
       data: isDark ? darkTheme : lightTheme,
       child: Scaffold(
-        appBar: AppBar(
-          title: CommonText(
-            text: 'POKE',
-            fontSize: 24,
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                isDark ? Icons.wb_sunny : Icons.nightlight_round,
-                color: isDark ? Colors.yellow : Colors.blueGrey,
-              ),
-              onPressed: toggleTheme,
-            ),
-          ],
+        appBar: CommonAppbar(
+          isDarkMode: isDark,
+          toggleTheme: _themeManager.toggleTheme,
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
