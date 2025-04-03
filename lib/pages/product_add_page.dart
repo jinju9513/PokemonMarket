@@ -15,6 +15,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
   final ThemeManager _themeManager = ThemeManager();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
     _themeManager.removeListener(_onThemeChanged);
     _nameController.dispose();
     _priceController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -37,6 +39,13 @@ class _ProductAddPageState extends State<ProductAddPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = _themeManager.isDarkMode;
+
+    // 다크모드에 맞는 색상 설정
+    final containerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final hintColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    final imageAreaColor = isDark ? Colors.grey.shade700 : Colors.grey.shade300;
+    final imageIconColor = isDark ? Colors.grey.shade300 : Colors.grey.shade700;
 
     return Theme(
       data: isDark ? darkTheme : lightTheme,
@@ -59,7 +68,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 child: Container(
                   height: 250,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: imageAreaColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -69,13 +78,13 @@ class _ProductAddPageState extends State<ProductAddPage> {
                         Icon(
                           Icons.add_a_photo,
                           size: 50,
-                          color: Colors.grey.shade700,
+                          color: imageIconColor,
                         ),
                         const SizedBox(height: 10),
                         CommonText(
                           text: 'image선택',
                           fontSize: 18,
-                          textColor: Colors.grey.shade700,
+                          textColor: imageIconColor,
                         ),
                       ],
                     ),
@@ -95,14 +104,16 @@ class _ProductAddPageState extends State<ProductAddPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+                        color: containerColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
                         controller: _nameController,
-                        decoration: const InputDecoration(
+                        style: TextStyle(color: textColor),
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '상품 이름을 입력하세요',
+                          hintStyle: TextStyle(color: hintColor),
                         ),
                       ),
                     ),
@@ -122,15 +133,17 @@ class _ProductAddPageState extends State<ProductAddPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+                        color: containerColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
                         controller: _priceController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
+                        style: TextStyle(color: textColor),
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '가격을 입력하세요',
+                          hintStyle: TextStyle(color: hintColor),
                         ),
                       ),
                     ),
@@ -148,15 +161,18 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 height: 150,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: containerColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const TextField(
+                child: TextField(
+                  controller: _descriptionController,
                   maxLines: null,
                   expands: true,
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: '상품 설명을 입력하세요',
+                    hintStyle: TextStyle(color: hintColor),
                   ),
                 ),
               ),
