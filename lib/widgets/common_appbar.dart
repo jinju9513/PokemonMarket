@@ -14,6 +14,7 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: true, // 타이틀을 가운데 정렬로 설정
       title: const CommonText(
         text: 'POKE',
         fontSize: 24,

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class ThemeManager {
   // 싱글톤 패턴 구현

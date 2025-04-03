@@ -1,0 +1,2 @@
+D:/market/PokemonMarket/android/app/.cxx/Debug/6r4f545y/x86/CMakeFiles/edit_cache.dir
+D:/market/PokemonMarket/android/app/.cxx/Debug/6r4f545y/x86/CMakeFiles/rebuild_cache.dir

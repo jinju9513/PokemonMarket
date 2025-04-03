@@ -75,8 +75,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             border: Border(
               top: BorderSide(
                 color: isDark
-                    ? Colors.purple.withOpacity(0.3)
-                    : Colors.grey.withOpacity(0.2),
+                    ? const Color.fromARGB(255, 255, 255, 255).withOpacity(0.3)
+                    : const Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -94,8 +94,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
+                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                  foregroundColor: const Color.fromARGB(255, 255, 255, 255),
                 ),
                 child: const CommonText(text: '구매하기', fontSize: 16),
               ),
