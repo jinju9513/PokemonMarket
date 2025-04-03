@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:pokemon_market/widgets/common_appbar.dart';
-
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
