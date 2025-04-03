@@ -36,16 +36,140 @@ class _ProductAddPageState extends State<ProductAddPage> {
     setState(() {});
   }
 
+  // 색상 테마 getter
+  ThemeColors _getThemeColors(bool isDark) {
+    return ThemeColors(
+      containerColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+      textColor: isDark ? Colors.white : Colors.black,
+      hintColor: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+      imageAreaColor: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+      imageIconColor: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
+    );
+  }
+
+  // 이미지 선택 위젯
+  Widget _buildImageSelector(ThemeColors colors) {
+    return GestureDetector(
+      onTap: () {
+        // 이미지 선택 로직
+      },
+      child: Container(
+        height: 250,
+        decoration: BoxDecoration(
+          color: colors.imageAreaColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add_a_photo,
+                size: 50,
+                color: colors.imageIconColor,
+              ),
+              const SizedBox(height: 10),
+              CommonText(
+                text: 'image선택',
+                fontSize: 18,
+                textColor: colors.imageIconColor,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 입력 필드 위젯
+  Widget _buildInputField({
+    required String label,
+    required TextEditingController controller,
+    required ThemeColors colors,
+    TextInputType? keyboardType,
+    String? hintText,
+    bool isExpanded = false,
+  }) {
+    final textField = TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: TextStyle(color: colors.textColor),
+      maxLines: isExpanded ? null : 1,
+      expands: isExpanded,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: hintText,
+        hintStyle: TextStyle(color: colors.hintColor),
+      ),
+    );
+
+    if (isExpanded) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CommonText(text: label, fontSize: 18),
+          const SizedBox(height: 10),
+          Container(
+            height: 150,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: colors.containerColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: textField,
+          ),
+        ],
+      );
+    }
+
+    return Row(
+      children: [
+        CommonText(text: label, fontSize: 18),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: colors.containerColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: textField,
+          ),
+        ),
+        if (label == '상품가격') ...[
+          const SizedBox(width: 10),
+          CommonText(text: '원', fontSize: 18),
+        ],
+      ],
+    );
+  }
+
+  // 등록 버튼 위젯
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      onPressed: () {
+        // 등록 로직
+        Navigator.pop(context);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: CommonText(
+        text: '등록하기',
+        fontSize: 18,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = _themeManager.isDarkMode;
-
-    // 다크모드에 맞는 색상 설정
-    final containerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade200;
-    final textColor = isDark ? Colors.white : Colors.black;
-    final hintColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
-    final imageAreaColor = isDark ? Colors.grey.shade700 : Colors.grey.shade300;
-    final imageIconColor = isDark ? Colors.grey.shade300 : Colors.grey.shade700;
+    final colors = _getThemeColors(isDark);
 
     return Theme(
       data: isDark ? darkTheme : lightTheme,
@@ -60,142 +184,32 @@ class _ProductAddPageState extends State<ProductAddPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 20),
-              // 이미지 선택 영역
-              GestureDetector(
-                onTap: () {
-                  // 이미지 선택 로직
-                },
-                child: Container(
-                  height: 250,
-                  decoration: BoxDecoration(
-                    color: imageAreaColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_a_photo,
-                          size: 50,
-                          color: imageIconColor,
-                        ),
-                        const SizedBox(height: 10),
-                        CommonText(
-                          text: 'image선택',
-                          fontSize: 18,
-                          textColor: imageIconColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              _buildImageSelector(colors),
               const SizedBox(height: 30),
-              // 상품명
-              Row(
-                children: [
-                  CommonText(
-                    text: '상품이름',
-                    fontSize: 18,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextField(
-                        controller: _nameController,
-                        style: TextStyle(color: textColor),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '상품 이름을 입력하세요',
-                          hintStyle: TextStyle(color: hintColor),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              _buildInputField(
+                label: '상품이름',
+                controller: _nameController,
+                colors: colors,
+                hintText: '상품 이름을 입력하세요',
               ),
               const SizedBox(height: 20),
-              // 상품가격
-              Row(
-                children: [
-                  CommonText(
-                    text: '상품가격',
-                    fontSize: 18,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextField(
-                        controller: _priceController,
-                        keyboardType: TextInputType.number,
-                        style: TextStyle(color: textColor),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '가격을 입력하세요',
-                          hintStyle: TextStyle(color: hintColor),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  CommonText(
-                    text: '원',
-                    fontSize: 18,
-                  ),
-                ],
+              _buildInputField(
+                label: '상품가격',
+                controller: _priceController,
+                colors: colors,
+                keyboardType: TextInputType.number,
+                hintText: '가격을 입력하세요',
               ),
               const SizedBox(height: 20),
-              // 상품 설명
-              Container(
-                height: 150,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: containerColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextField(
-                  controller: _descriptionController,
-                  maxLines: null,
-                  expands: true,
-                  style: TextStyle(color: textColor),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '상품 설명을 입력하세요',
-                    hintStyle: TextStyle(color: hintColor),
-                  ),
-                ),
+              _buildInputField(
+                label: '상품설명',
+                controller: _descriptionController,
+                colors: colors,
+                hintText: '상품 설명을 입력하세요',
+                isExpanded: true,
               ),
               const Spacer(),
-              // 등록하기 버튼
-              ElevatedButton(
-                onPressed: () {
-                  // 등록 로직
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: CommonText(
-                  text: '등록하기',
-                  fontSize: 18,
-                ),
-              ),
+              _buildSubmitButton(),
               const SizedBox(height: 20),
             ],
           ),
@@ -203,4 +217,21 @@ class _ProductAddPageState extends State<ProductAddPage> {
       ),
     );
   }
+}
+
+// 테마 색상을 관리하는 클래스
+class ThemeColors {
+  final Color containerColor;
+  final Color textColor;
+  final Color hintColor;
+  final Color imageAreaColor;
+  final Color imageIconColor;
+
+  ThemeColors({
+    required this.containerColor,
+    required this.textColor,
+    required this.hintColor,
+    required this.imageAreaColor,
+    required this.imageIconColor,
+  });
 }
