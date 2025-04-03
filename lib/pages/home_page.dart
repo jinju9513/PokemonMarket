@@ -5,6 +5,7 @@ import 'package:pokemon_market/widgets/common_text.dart';
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
+import 'package:pokemon_market/pages/product_add_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -71,7 +72,14 @@ class Fab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductAddPage(),
+          ),
+        );
+      },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
