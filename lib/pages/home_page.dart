@@ -13,6 +13,11 @@ class HomePage extends StatelessWidget {
           fontSize: 24,
         ),
       ),
+      body: Column(
+        children: [
+          
+        ],
+      ),
     );
   }
 }
