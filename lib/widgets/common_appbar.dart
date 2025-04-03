@@ -14,7 +14,7 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: CommonText(
+      title: const CommonText(
         text: 'POKE',
         fontSize: 24,
       ),

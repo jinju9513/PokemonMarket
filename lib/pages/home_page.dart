@@ -49,11 +49,11 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               //TODO: 삼항연산자 사용해서 상품여부 확인필요
-              CommonText(
+              const CommonText(
                 text: '상품이 없습니다.',
                 fontSize: 24,
               ),
-              HomePageList(),
+              const HomePageList(),
             ],
           ),
         ),
@@ -85,7 +85,7 @@ class Fab extends StatelessWidget {
       ),
       backgroundColor:
           isDarkMode ? darkTheme.primaryColor : lightTheme.primaryColor,
-      child: Icon(
+      child: const Icon(
         Icons.add,
         size: 30,
         weight: 800,

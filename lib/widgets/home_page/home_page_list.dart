@@ -26,7 +26,7 @@ class HomePageList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductDetailPage(),
+                  builder: (context) => const ProductDetailPage(),
                 ),
               );
             },
@@ -34,7 +34,7 @@ class HomePageList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Row(
                 children: [
-                  CommonImg(
+                  const CommonImg(
                     path: 'assets/5.png',
                     height: 120,
                     width: 120,
@@ -47,12 +47,12 @@ class HomePageList extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CommonText(
+                            const CommonText(
                               text: '피카츄',
                               fontSize: 24,
                             ),
-                            SizedBox(height: 24),
-                            CommonText(
+                            const SizedBox(height: 24),
+                            const CommonText(
                               text: '가격 : 10,000원',
                               fontSize: 18,
                             ),

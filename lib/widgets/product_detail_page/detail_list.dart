@@ -18,17 +18,17 @@ class DetailList extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CommonText(text: '상품명 :', fontSize: 20),
-                CommonText(text: '리자몽', fontSize: 24),
+                const CommonText(text: '상품명 :', fontSize: 20),
+                const CommonText(text: '리자몽', fontSize: 24),
               ],
             ),
-            CommonText(text: '10,000원', fontSize: 20),
+            const CommonText(text: '10,000원', fontSize: 20),
           ],
         ),
-        SizedBox(height: 60),
-        CommonText(text: '상품설명 : ', fontSize: 18),
-        CommonText(text: '&^*%^*%*!@!,#', fontSize: 22),
-        SizedBox(height: 30),
+        const SizedBox(height: 60),
+        const CommonText(text: '상품설명 : ', fontSize: 18),
+        const CommonText(text: '&^*%^*%*!@!,#', fontSize: 22),
+        const SizedBox(height: 30),
       ],
     );
   }

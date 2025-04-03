@@ -47,26 +47,29 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: ListView(
             children: [
-              SizedBox(height: 30),
-              CommonImg(
-                  path: 'assets/2.png', height: 450, boxFit: BoxFit.fitHeight),
-              SizedBox(height: 30),
-              DetailList()
+              const SizedBox(height: 30),
+              const CommonImg(
+                path: 'assets/2.png',
+                height: 450,
+                boxFit: BoxFit.fitHeight,
+              ),
+              const SizedBox(height: 30),
+              const DetailList(),
             ],
           ),
         ),
         bottomNavigationBar: Container(
           width: double.infinity,
           height: 115,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           decoration: BoxDecoration(
-            color: isDark ? Color(0xFF2D2D2D) : Colors.white,
+            color: isDark ? const Color(0xFF2D2D2D) : Colors.white,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
                 blurRadius: 10,
                 spreadRadius: 0,
-                offset: Offset(0, -5),
+                offset: const Offset(0, -5),
               ),
             ],
             border: Border(
@@ -88,12 +91,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
               ElevatedButton(
                 onPressed: () {},
-                child: CommonText(text: '구매하기', fontSize: 16),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   backgroundColor: Colors.purple,
                   foregroundColor: Colors.white,
                 ),
+                child: const CommonText(text: '구매하기', fontSize: 16),
               ),
             ],
           ),

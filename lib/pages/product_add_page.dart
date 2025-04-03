@@ -159,7 +159,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      child: CommonText(
+      child: const CommonText(
         text: '등록하기',
         fontSize: 18,
       ),
@@ -227,7 +227,7 @@ class ThemeColors {
   final Color imageAreaColor;
   final Color imageIconColor;
 
-  ThemeColors({
+  const ThemeColors({
     required this.containerColor,
     required this.textColor,
     required this.hintColor,
