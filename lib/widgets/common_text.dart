@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class CommonText extends StatelessWidget {
   final String text;
   final double? fontSize;
-  final Color textColor;
+  final Color? textColor;
 
   const CommonText({
     super.key,
     required this.text,
     this.fontSize,
-    this.textColor = Colors.black,
+    this.textColor,
   });
 
   @override
