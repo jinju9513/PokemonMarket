@@ -18,6 +18,11 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
+            //TODO: 삼항연산자 사용해서 상품여부 확인필요
+            CommonText(
+              text: '상품이 없습니다.',
+              fontSize: 24,
+            ),
             HomePageList(),
           ],
         ),
