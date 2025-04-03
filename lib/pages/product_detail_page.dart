@@ -30,14 +30,22 @@ class ProductDetailPage extends StatelessWidget {
             Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CommonText(text: 'text'),
-                        CommonText(text: 'text'),
+                        CommonText(
+                          text: '상품명',
+                          fontSize: 20,
+                        ),
+                        CommonText(
+                          text: '리자몽',
+                          fontSize: 24,
+                        ),
                       ],
                     ),
-                    CommonText(text: 'text'),
+                    CommonText(text: '10,000원'),
                   ],
                 )
               ],
