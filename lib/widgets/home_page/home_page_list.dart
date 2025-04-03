@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_market/widgets/common_img.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
 
 class HomePageList extends StatelessWidget {
@@ -23,14 +24,11 @@ class HomePageList extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    'assets/1.png',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.cover,
-                  ),
+                CommonImg(
+                  path: 'assets/5.png',
+                  height: 120,
+                  width: 120,
+                  boxFit: BoxFit.cover,
                 ),
                 Expanded(
                   child: Row(
