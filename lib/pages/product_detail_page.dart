@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_market/widgets/common_img.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
 
 class ProductDetailPage extends StatelessWidget {
@@ -18,19 +19,14 @@ class ProductDetailPage extends StatelessWidget {
         child: ListView(
           children: [
             SizedBox(height: 30),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                'assets/1.png',
-                width: double.infinity,
-                height: 450,
-                fit: BoxFit.fitHeight,
-              ),
-            ),
+            CommonImg(
+                path: 'assets/2.png', height: 450, boxFit: BoxFit.fitHeight),
+            SizedBox(height: 30),
             Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +41,10 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    CommonText(text: '10,000원'),
+                    CommonText(
+                      text: '10,000원',
+                      fontSize: 20,
+                    ),
                   ],
                 )
               ],
