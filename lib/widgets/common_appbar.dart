@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
 
-class CommonAppbar extends StatelessWidget {
+class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDarkMode;
   final VoidCallback toggleTheme;
 
@@ -29,4 +29,7 @@ class CommonAppbar extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
