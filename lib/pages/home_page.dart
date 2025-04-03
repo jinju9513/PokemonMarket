@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:pokemon_market/widgets/common_appbar.dart';
-import 'package:pokemon_market/widgets/common_text.dart';
+
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
@@ -83,8 +83,7 @@ class Fab extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      backgroundColor:
-          isDarkMode ? darkTheme.primaryColor : lightTheme.primaryColor,
+      backgroundColor: isDarkMode ?Colors.white : const Color.fromARGB(255, 255, 255, 255), 
       child: const Icon(
         Icons.add,
         size: 30,

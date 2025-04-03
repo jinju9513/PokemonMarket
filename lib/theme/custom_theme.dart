@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 final lightTheme = ThemeData(
   brightness: Brightness.light,
-  primaryColor: Colors.purple,
+  primaryColor: const Color.fromARGB(255, 0, 0, 0),
   scaffoldBackgroundColor: Colors.grey[100],
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
