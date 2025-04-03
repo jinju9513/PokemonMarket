@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
+import 'package:pokemon_market/theme/theme_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,33 +14,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isDarkMode = true;
+  final ThemeManager _themeManager = ThemeManager();
 
-  void toggleTheme() {
-    setState(() {
-      isDarkMode = !isDarkMode;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _themeManager.addListener(_onThemeChanged);
+  }
+
+  @override
+  void dispose() {
+    _themeManager.removeListener(_onThemeChanged);
+    super.dispose();
+  }
+
+  void _onThemeChanged(bool isDark) {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = _themeManager.isDarkMode;
+
     return Theme(
       data: isDarkMode ? darkTheme : lightTheme,
       child: Scaffold(
-        appBar: AppBar(
-          title: CommonText(
-            text: 'POKE',
-            fontSize: 24,
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
-                color: isDarkMode ? Colors.yellow : Colors.blueGrey,
-              ),
-              onPressed: toggleTheme,
-            ),
-          ],
+        appBar: CommonAppbar(
+          isDarkMode: isDarkMode,
+          toggleTheme: _themeManager.toggleTheme,
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -53,13 +56,20 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        floatingActionButton: Fab(),
+        floatingActionButton: Fab(isDarkMode: isDarkMode),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
+}
 
-  FloatingActionButton Fab() {
+class Fab extends StatelessWidget {
+  final bool isDarkMode;
+
+  const Fab({super.key, required this.isDarkMode});
+
+  @override
+  Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {},
       shape: RoundedRectangleBorder(
