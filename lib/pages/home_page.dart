@@ -16,12 +16,23 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: 10,
+              separatorBuilder: (context, index) {
+                return Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Colors.grey,
+                );
+              },
               itemBuilder: (context, index) {
                 return Row(
                   children: [
-                    Image.asset('/assets/리자몽.png'),
+                    Image.asset(
+                      'assets/1.png',
+                      width: 200,
+                      height: 200,
+                    ),
                     Column(
                       children: [
                         CommonText(text: '피카츄'),
