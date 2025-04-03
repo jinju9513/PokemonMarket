@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
-import 'package:flutter/rendering.dart';
+import 'package:pokemon_market/theme/custom_theme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,27 +12,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isDarkMode = false;
+  bool isDarkMode = true;
 
   void toggleTheme() {
     setState(() {
       isDarkMode = !isDarkMode;
-      // 테마 변경 로직 - 실제 앱 테마 변경
-      final brightness = isDarkMode ? Brightness.dark : Brightness.light;
-      final systemUiOverlayStyle = SystemUiOverlayStyle(
-        statusBarBrightness: brightness,
-        systemNavigationBarIconBrightness: brightness,
-        statusBarIconBrightness:
-            brightness == Brightness.light ? Brightness.dark : Brightness.light,
-      );
-      SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      data: isDarkMode ? darkTheme : lightTheme,
       child: Scaffold(
         appBar: AppBar(
           title: CommonText(
@@ -74,6 +65,8 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
+      backgroundColor:
+          isDarkMode ? darkTheme.primaryColor : lightTheme.primaryColor,
       child: Icon(
         Icons.add,
         size: 30,

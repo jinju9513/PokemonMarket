@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_market/pages/home_page.dart';
+import 'package:pokemon_market/pages/product_detail_page.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 
 void main() {
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
-      home: HomePage(),
+      // home: HomePage(),
+      home: ProductDetailPage(),
     );
   }
 }
