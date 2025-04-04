@@ -57,7 +57,7 @@ class _CardTradeListState extends State<CardTradeList> {
           // FloatingActionButton 위에 Positioned 위젯
           Positioned(
             bottom: 56,
-            right: 26,
+            right: 36,
             child: FloatingActionButton(
               onPressed: () {
                 // Navigator.push(
