@@ -73,7 +73,8 @@ class _CardTradeListState extends State<CardTradeList> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32),
               ),
-              child: const Icon(Icons.add, size: 30),
+              child: Image.asset('assets/plus_logo.png'),
+
               // 테마에서 색상 적용되므로 따로 설정할 필요 없음!
             ),
           ),

@@ -204,11 +204,7 @@ class _HomePageListState extends State<HomePageList> {
             ),
             onPressed: widget.onAddProduct,
             backgroundColor: PokemonColors.primaryRed,
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 32,
-            ),
+            child: Image.asset('assets/plus_logo.png'),
           ),
         ),
       ],
