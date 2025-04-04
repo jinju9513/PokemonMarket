@@ -3,6 +3,7 @@ import 'package:pokemon_market/pages/edit_product_page.dart';
 import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/product_detail_page/detail_list.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
+import 'package:pokemon_market/pages/shopping_cart.dart'; // CartManager import 추가
 import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -33,6 +34,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   void _showAddToCartDialog(BuildContext context) {
+    // 장바구니에 상품 추가
+    final cartManager = Provider.of<CartManager>(context, listen: false);
+    cartManager
+        .addItem(CartItem.fromProduct(widget.product, quantity: _quantity));
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -45,7 +51,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('취소', style: TextStyle(color: Colors.grey)),
+                    child:
+                        const Text('취소', style: TextStyle(color: Colors.grey)),
                   ),
                 ),
                 Container(
@@ -56,7 +63,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child:
+                        const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -81,7 +89,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child:
+                        const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -171,10 +180,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     if (_quantity > 1) setState(() => _quantity--);
                   },
                   padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                  constraints:
+                      const BoxConstraints(minWidth: 28, minHeight: 28),
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 Padding(
@@ -188,10 +199,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   icon: const Icon(Icons.add, color: Colors.black),
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                  constraints:
+                      const BoxConstraints(minWidth: 28, minHeight: 28),
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ],
@@ -212,8 +225,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
               child: const Text('구매하기', style: TextStyle(fontSize: 16)),

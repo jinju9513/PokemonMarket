@@ -3,6 +3,7 @@ import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/pages/product_add_page.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
+import 'package:pokemon_market/pages/cart_page.dart'; //카트 매니저 추가가
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,6 +40,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _showProductList = false;
     });
+  }
+
+  // 장바구니로 이동하는 메서드 추가
+  void _navigateToCart() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CartPage()),
+    );
   }
 
   @override
@@ -92,13 +101,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 16),
                         // 장바구니 버튼
                         ElevatedButton(
-                          onPressed: () {
-                            // TODO: 장바구니 페이지로 이동 (아직 없음)
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => CartPage()), // 장바구니 페이지 추가 예정
-                            // );
-                          },
+                          onPressed: _navigateToCart, // 장바구니 페이지로 이동
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey[300],
                             padding: const EdgeInsets.symmetric(
