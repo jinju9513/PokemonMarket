@@ -25,8 +25,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Pokemon Market',
-      theme: Provider.of<ThemeManager>(context).isDarkMode ? darkTheme : lightTheme,
+      theme: Provider.of<ThemeManager>(context).isDarkMode
+          ? darkTheme
+          : lightTheme,
       home: const HomePage(),
     );
   }
