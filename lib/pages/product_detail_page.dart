@@ -35,7 +35,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   void _showAddToCartDialog(BuildContext context) {
     final cartManager = Provider.of<CartManager>(context, listen: false);
-    cartManager.addItem(CartItem.fromProduct(widget.product, quantity: _quantity));
+    cartManager
+        .addItem(CartItem.fromProduct(widget.product, quantity: _quantity));
 
     showDialog(
       context: context,
@@ -49,14 +50,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('취소', style: TextStyle(color: Colors.grey)),
+                    child:
+                        const Text('취소', style: TextStyle(color: Colors.grey)),
                   ),
                 ),
                 Container(width: 1, height: 40, color: Colors.grey[300]),
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child:
+                        const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -81,7 +84,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child:
+                        const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -120,7 +124,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pop(context, {'deleted': true, 'id': widget.product['id']});
+                final id = widget.product['id'];
+                print('삭제할 상품 ID: $id');
+                Navigator.pop(context, {'deleted': true, 'id': id});
               },
               child: const Text('삭제', style: TextStyle(color: Colors.red)),
             ),
@@ -182,12 +188,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     if (_quantity > 1) setState(() => _quantity--);
                   },
                   padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
-                    backgroundColor: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.grey[800]
-                        : Colors.grey[100],
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 Padding(
@@ -211,12 +220,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
-                    backgroundColor: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.grey[800]
-                        : Colors.grey[100],
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ],
@@ -246,8 +258,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 foregroundColor: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white
                     : Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
               child: Text(

@@ -16,7 +16,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> products = [];
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -78,9 +79,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
 
     if (result != null && result is List<Map<String, dynamic>>) {
+      print('홈페이지로 돌아옴: 이전 상품 ${products.length}개, 반환된 상품 ${result.length}개');
       setState(() {
-        products = List.from(result);
+        products = List<Map<String, dynamic>>.from(result);
       });
+      print('홈페이지 상품 목록 업데이트 완료: ${products.length}개');
     }
   }
 
@@ -207,7 +210,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     onTap: () {
                       Navigator.push(
                         context,
-                        CupertinoPageRoute(builder: (context) => CardTradeList()),
+                        CupertinoPageRoute(
+                            builder: (context) => CardTradeList()),
                       );
                     },
                   ),
@@ -321,9 +325,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
     }
   }
 
-  void _handleDelete(String? productId) { // String?로 변경
+  void _handleDelete(String? productId) {
     setState(() {
-      _localProducts.removeWhere((product) => product['id']?.toString() == productId);
+      _localProducts
+          .removeWhere((product) => product['id']?.toString() == productId);
     });
   }
 
@@ -332,93 +337,104 @@ class _ProductListScreenState extends State<ProductListScreen> {
     final themeManager = Provider.of<ThemeManager>(context);
     final isDarkMode = themeManager.isDarkMode;
 
-    return Scaffold(
-      appBar: CommonAppbar(
-        isDarkMode: isDarkMode,
-        toggleTheme: themeManager.toggleTheme,
-        onBackPressed: () => Navigator.of(context).pop(_localProducts),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              isDarkMode
-                  ? 'assets/dark_pokeballs_bg.png'
-                  : 'assets/light_pokeballs_bg.png',
-            ),
-            fit: BoxFit.cover,
-            opacity: 0.05,
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        // 뒤로가기 버튼 클릭 시 상품 목록 반환
+        print('WillPopScope: 상품 목록 화면 종료 (상품 ${_localProducts.length}개)');
+        Navigator.of(context).pop(_localProducts);
+        return false; // 시스템 뒤로가기는 처리하지 않음
+      },
+      child: Scaffold(
+        appBar: CommonAppbar(
+          isDarkMode: isDarkMode,
+          toggleTheme: themeManager.toggleTheme,
+          onBackPressed: () {
+            print('상품 목록 화면 종료: 상품 ${_localProducts.length}개');
+            Navigator.of(context).pop(_localProducts);
+          },
         ),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: isDarkMode
-                    ? PokemonColors.cardDark
-                    : PokemonColors.cardLight,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: isDarkMode ? Colors.black45 : Colors.black12,
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  ),
-                ],
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                isDarkMode
+                    ? 'assets/dark_pokeballs_bg.png'
+                    : 'assets/light_pokeballs_bg.png',
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.shopping_bag_rounded,
-                    color: isDarkMode
-                        ? PokemonColors.primaryYellow
-                        : PokemonColors.primaryRed,
-                    size: 28,
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    '상품 목록',
-                    style: GoogleFonts.poppins(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black87,
+              fit: BoxFit.cover,
+              opacity: 0.05,
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? PokemonColors.cardDark
+                      : PokemonColors.cardLight,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode ? Colors.black45 : Colors.black12,
+                      blurRadius: 5,
+                      spreadRadius: 1,
                     ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.shopping_bag_rounded,
                       color: isDarkMode
-                          ? PokemonColors.primaryYellow.withOpacity(0.2)
-                          : PokemonColors.primaryRed.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
+                          ? PokemonColors.primaryYellow
+                          : PokemonColors.primaryRed,
+                      size: 28,
                     ),
-                    child: Text(
-                      '${_localProducts.length}개',
+                    const SizedBox(width: 12),
+                    Text(
+                      '상품 목록',
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: isDarkMode
-                            ? PokemonColors.primaryYellow
-                            : PokemonColors.primaryRed,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black87,
                       ),
                     ),
-                  ),
-                ],
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? PokemonColors.primaryYellow.withOpacity(0.2)
+                            : PokemonColors.primaryRed.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${_localProducts.length}개',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode
+                              ? PokemonColors.primaryYellow
+                              : PokemonColors.primaryRed,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: HomePageList(
-                products: _localProducts,
-                onAddProduct: _handleAddProduct,
-                onDelete: _handleDelete,
+              Expanded(
+                child: HomePageList(
+                  products: _localProducts,
+                  onAddProduct: _handleAddProduct,
+                  onDelete: _handleDelete,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -103,7 +103,15 @@ class _HomePageListState extends State<HomePageList> {
                           if (result != null &&
                               result is Map<String, dynamic>) {
                             if (result['deleted'] == true) {
-                              widget.onDelete(result['id']?.toString()); // null 체크 및 String 변환
+                              final id = result['id']?.toString();
+                              print('삭제 요청된 상품 ID: $id');
+                              setState(() {
+                                widget.products.removeWhere(
+                                  (item) => item['id']?.toString() == id,
+                                );
+                              });
+                              widget.onDelete(id);
+                              print('삭제 후 남은 상품 수: ${widget.products.length}');
                             } else {
                               setState(() {
                                 widget.products[index] = result;
@@ -315,20 +323,24 @@ class _HomePageListState extends State<HomePageList> {
                 },
               ),
         Positioned(
-          bottom: 56,
-          right: 36,
+          bottom: 24,
+          right: 24,
           child: FloatingActionButton(
             heroTag: 'add_product',
             elevation: 4,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(32),
+              borderRadius: BorderRadius.circular(16),
             ),
             onPressed: () {
               widget.onAddProduct();
               setState(() {});
             },
             backgroundColor: PokemonColors.primaryRed,
-            child: Image.asset('assets/plus_logo.png'),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
         ),
       ],
