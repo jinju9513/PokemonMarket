@@ -47,26 +47,38 @@ class _HomePageListState extends State<HomePageList> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
         widget.products.isEmpty
             ? Center(
-                child: CommonText(
-                  text: '등록된 상품이 없습니다.',
-                  fontSize: 18,
-                  textColor: Theme.of(context).textTheme.bodyMedium!.color,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/empty_pokemon.png',
+                      width: 120,
+                      height: 120,
+                    ),
+                    const SizedBox(height: 16),
+                    CommonText(
+                      text: '등록된 상품이 없습니다',
+                      fontSize: 18,
+                      textColor: Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
+                    const SizedBox(height: 8),
+                    CommonText(
+                      text: '새로운 상품을 등록해보세요!',
+                      fontSize: 14,
+                      textColor: Colors.grey,
+                    ),
+                  ],
                 ),
               )
-            : ListView.separated(
+            : ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: widget.products.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.grey[800]
-                      : Colors.grey[200],
-                ),
                 itemBuilder: (context, index) {
                   final product = widget.products[index];
                   final productId =
@@ -100,87 +112,199 @@ class _HomePageListState extends State<HomePageList> {
                             }
                           }
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? PokemonColors.cardDark
+                                : PokemonColors.cardLight,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                spreadRadius: 0,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: product['imagePath'] != null
-                                    ? CommonImg(
-                                        path: product['imagePath'] as String,
-                                        height: 80,
-                                        width: 80,
-                                        boxFit: BoxFit.cover,
-                                      )
-                                    : const CommonImg(
-                                        path: 'assets/placeholder.png',
-                                        height: 80,
-                                        width: 80,
-                                        boxFit: BoxFit.cover,
+                              // 상품 이미지
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(16),
+                                    ),
+                                    child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: product['imagePath'] != null
+                                          ? CommonImg(
+                                              path: product['imagePath']
+                                                  as String,
+                                              width: double.infinity,
+                                              height: 200,
+                                              boxFit: BoxFit.cover,
+                                            )
+                                          : const CommonImg(
+                                              path: 'assets/placeholder.png',
+                                              width: double.infinity,
+                                              height: 200,
+                                              boxFit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  ),
+                                  // 좋아요 버튼
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        likeProvider.toggleLike(productId);
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: isDarkMode
+                                              ? Colors.black.withOpacity(0.5)
+                                              : Colors.white.withOpacity(0.7),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          isLiked
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isLiked
+                                              ? PokemonColors.primaryRed
+                                              : Colors.grey,
+                                          size: 20,
+                                        ),
                                       ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 16),
-                              Expanded(
+                              // 상품 정보
+                              Padding(
+                                padding: const EdgeInsets.all(16),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CommonText(
-                                      text: product['name'] ?? '이름 없음',
-                                      fontSize: 16,
-                                      textColor: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    CommonText(
-                                      text:
-                                          '포켓몬 센터 • ${formatCreatedAt(product['createdAt'])}',
-                                      fontSize: 14,
-                                      textColor: Colors.grey,
-                                    ),
-                                    const SizedBox(height: 4),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Flexible(
+                                          child: CommonText(
+                                            text: product['name'] ?? '이름 없음',
+                                            fontSize: 18,
+                                            textColor: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                         CommonText(
                                           text:
                                               '${formatPrice(product['price'])}원',
-                                          fontSize: 16,
-                                          textColor: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
+                                          fontSize: 18,
+                                          textColor: PokemonColors.primaryRed,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            likeProvider.toggleLike(productId);
-                                          },
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 16,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        CommonText(
+                                          text: '포켓몬 센터',
+                                          fontSize: 14,
+                                          textColor: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Icon(
+                                          Icons.access_time,
+                                          size: 16,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        CommonText(
+                                          text: formatCreatedAt(
+                                              product['createdAt']),
+                                          fontSize: 14,
+                                          textColor: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: isDarkMode
+                                                ? PokemonColors.primaryBlue
+                                                    .withOpacity(0.2)
+                                                : PokemonColors.primaryBlue
+                                                    .withOpacity(0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
                                           child: Row(
                                             children: [
                                               Icon(
-                                                isLiked
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: isLiked
-                                                    ? Colors.red
-                                                    : Colors.grey,
-                                                size: 20,
+                                                Icons.favorite,
+                                                color: PokemonColors.primaryRed,
+                                                size: 14,
                                               ),
                                               const SizedBox(width: 4),
                                               CommonText(
                                                 text: '$likeCount',
-                                                fontSize: 14,
-                                                textColor: Colors.grey,
+                                                fontSize: 12,
+                                                textColor: isDarkMode
+                                                    ? Colors.white70
+                                                    : Colors.black87,
                                               ),
                                             ],
                                           ),
                                         ),
+                                        const SizedBox(width: 8),
+                                        if (product['quantity'] != null)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: isDarkMode
+                                                  ? PokemonColors.primaryYellow
+                                                      .withOpacity(0.2)
+                                                  : PokemonColors.primaryYellow
+                                                      .withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: CommonText(
+                                              text:
+                                                  '수량: ${product['quantity']}개',
+                                              fontSize: 12,
+                                              textColor: isDarkMode
+                                                  ? Colors.white70
+                                                  : Colors.black87,
+                                            ),
+                                          ),
                                       ],
                                     ),
                                   ],
@@ -195,12 +319,13 @@ class _HomePageListState extends State<HomePageList> {
                 },
               ),
         Positioned(
-          //FIXME: 위치조정
-          bottom: 56,
-          right: 36,
+          bottom: 24,
+          right: 24,
           child: FloatingActionButton(
+            heroTag: 'add_product',
+            elevation: 4,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(32),
+              borderRadius: BorderRadius.circular(16),
             ),
             onPressed: () {
               widget.onAddProduct();
@@ -208,7 +333,11 @@ class _HomePageListState extends State<HomePageList> {
               setState(() {});
             },
             backgroundColor: PokemonColors.primaryRed,
-            child: Image.asset('assets/plus_logo.png'),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
         ),
       ],
