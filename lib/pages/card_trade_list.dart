@@ -37,36 +37,46 @@ class _CardTradeListState extends State<CardTradeList> {
       appBar: CommonAppbar(
           isDarkMode: themeManager.isDarkMode,
           toggleTheme: themeManager.toggleTheme),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: cardTradeData.length,
-        itemBuilder: (context, index) {
-          final data = cardTradeData[index];
-          return CardTradeDetailList(
-            userName: data['userName'],
-            desiredCards: List<String>.from(data['desiredCards']),
-            ownedCards: List<String>.from(data['ownedCards']),
-          );
-        },
-        separatorBuilder: (context, index) => const SizedBox(height: 20),
-      ),
-      // ✅ 하단 FloatingActionButton 추가 (테마 적용됨)
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => const CardRegisterPage(),
-          //   ),
-          // );
-        },
-        backgroundColor: PokemonColors.primaryRed, // 빨간색
-        foregroundColor: Colors.white, // 아이콘 흰색
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: const Icon(Icons.add, size: 30),
-        // 테마에서 색상 적용되므로 따로 설정할 필요 없음!
+      body: Stack(
+        children: [
+          // 카드 리스트
+          ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: cardTradeData.length,
+            itemBuilder: (context, index) {
+              final data = cardTradeData[index];
+              return CardTradeDetailList(
+                userName: data['userName'],
+                desiredCards: List<String>.from(data['desiredCards']),
+                ownedCards: List<String>.from(data['ownedCards']),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(height: 20),
+          ),
+
+          // FloatingActionButton 위에 Positioned 위젯
+          Positioned(
+            bottom: 56,
+            right: 26,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const CardRegisterPage(),
+                //   ),
+                // );
+              },
+              backgroundColor: PokemonColors.primaryRed, // 빨간색
+              foregroundColor: Colors.white, // 아이콘 흰색
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(Icons.add, size: 30),
+              // 테마에서 색상 적용되므로 따로 설정할 필요 없음!
+            ),
+          ),
+        ],
       ),
     );
   }
