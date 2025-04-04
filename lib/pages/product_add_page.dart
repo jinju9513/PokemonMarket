@@ -247,6 +247,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
           'description': _descriptionController.text,
           'quantity': _quantity,
           'imagePath': imagePath,
+          'createdAt': DateTime.now().toIso8601String(),
         };
         Navigator.pop(context, product);
       },

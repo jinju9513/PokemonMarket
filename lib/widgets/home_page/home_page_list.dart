@@ -63,11 +63,14 @@ class _HomePageListState extends State<HomePageList> {
                 separatorBuilder: (context, index) => Divider(
                   height: 1,
                   thickness: 1,
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey[800]
+                      : Colors.grey[200],
                 ),
                 itemBuilder: (context, index) {
                   final product = widget.products[index];
-                  final productId = product['id']?.toString() ?? index.toString();
+                  final productId =
+                      product['id']?.toString() ?? index.toString();
 
                   return Consumer<LikeProvider>(
                     builder: (context, likeProvider, child) {
@@ -79,11 +82,13 @@ class _HomePageListState extends State<HomePageList> {
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProductDetailPage(product: product),
+                              builder: (context) =>
+                                  ProductDetailPage(product: product),
                             ),
                           );
 
-                          if (result != null && result is Map<String, dynamic>) {
+                          if (result != null &&
+                              result is Map<String, dynamic>) {
                             if (result['deleted'] == true) {
                               setState(() {
                                 widget.products.removeAt(index);
@@ -124,41 +129,59 @@ class _HomePageListState extends State<HomePageList> {
                                     CommonText(
                                       text: product['name'] ?? '이름 없음',
                                       fontSize: 16,
-                                      textColor: Theme.of(context).textTheme.bodyLarge!.color,
+                                      textColor: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     const SizedBox(height: 4),
                                     CommonText(
-                                      text: '포켓몬 센터 • ${formatCreatedAt(product['createdAt'])}',
+                                      text:
+                                          '포켓몬 센터 • ${formatCreatedAt(product['createdAt'])}',
                                       fontSize: 14,
                                       textColor: Colors.grey,
                                     ),
                                     const SizedBox(height: 4),
-                                    CommonText(
-                                      text: '${formatPrice(product['price'])}원',
-                                      fontSize: 16,
-                                      textColor: Theme.of(context).textTheme.bodyLarge!.color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  likeProvider.toggleLike(productId);
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      isLiked ? Icons.favorite : Icons.favorite_border,
-                                      color: isLiked ? Colors.red : Colors.grey,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    CommonText(
-                                      text: '$likeCount',
-                                      fontSize: 14,
-                                      textColor: Colors.grey,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CommonText(
+                                          text:
+                                              '${formatPrice(product['price'])}원',
+                                          fontSize: 16,
+                                          textColor: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            likeProvider.toggleLike(productId);
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                isLiked
+                                                    ? Icons.favorite
+                                                    : Icons.favorite_border,
+                                                color: isLiked
+                                                    ? Colors.red
+                                                    : Colors.grey,
+                                                size: 20,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              CommonText(
+                                                text: '$likeCount',
+                                                fontSize: 14,
+                                                textColor: Colors.grey,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
