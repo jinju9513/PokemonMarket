@@ -110,7 +110,7 @@ class CardTradeDetailList extends StatelessWidget {
                 path: path,
                 width: 60,
                 height: 60,
-                boxFit: BoxFit.cover,
+                boxFit: BoxFit.contain,
               ),
             ),
           );
