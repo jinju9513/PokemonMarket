@@ -319,13 +319,13 @@ class _HomePageListState extends State<HomePageList> {
                 },
               ),
         Positioned(
-          bottom: 24,
-          right: 24,
+          bottom: 56,
+          right: 36,
           child: FloatingActionButton(
             heroTag: 'add_product',
             elevation: 4,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(32),
             ),
             onPressed: () {
               widget.onAddProduct();
@@ -333,11 +333,7 @@ class _HomePageListState extends State<HomePageList> {
               setState(() {});
             },
             backgroundColor: PokemonColors.primaryRed,
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 28,
-            ),
+            child: Image.asset('assets/plus_logo.png'),
           ),
         ),
       ],
