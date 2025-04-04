@@ -34,40 +34,35 @@ class DetailList extends StatelessWidget {
                   ),
           ),
           const SizedBox(height: 20),
-          // 상품명과 가격
+          // 상품명과 남은 갯수 (상단)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CommonText(text: '상품명 :', fontSize: 20),
-                  CommonText(
-                    text: product['name'] ?? '이름 없음',
-                    fontSize: 24,
-                  ),
-                ],
+              CommonText(
+                text: product['name'] ?? '이름 없음',
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
               CommonText(
-                text: '${product['price'] ?? '0'}원',
-                fontSize: 20,
+                text: '남은 갯수 : ${product['quantity'] ?? 0}개',
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               ),
             ],
           ),
+          const SizedBox(height: 15),
+          // 상품 가격 (중단)
+          CommonText(
+            text: '${product['price'] ?? 0}원',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
           const SizedBox(height: 20),
-          // 상품 내용
-          const CommonText(text: '상품설명 : ', fontSize: 18),
+          // 상세 내용 (하단)
           CommonText(
             text: product['description'] ?? '설명 없음',
             fontSize: 22,
-          ),
-          const SizedBox(height: 20),
-          // 남은 갯수
-          const CommonText(text: '남은 갯수 : ', fontSize: 18),
-          CommonText(
-            text: '${product['quantity'] ?? 0}개',
-            fontSize: 22,
+            fontWeight: FontWeight.normal,
           ),
           const SizedBox(height: 30),
         ],
