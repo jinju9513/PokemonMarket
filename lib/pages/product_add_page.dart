@@ -231,17 +231,22 @@ class _ProductAddPageState extends State<ProductAddPage> {
 
   // 등록 버튼 위젯
   Widget _buildSubmitButton() {
+    final isDark = _themeManager.isDarkMode;
     return ElevatedButton(
       onPressed: () {
         // 등록 로직 (예: 이미지, 이름, 가격, 설명, 갯수 데이터 처리)
         Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: isDark
+            ? const Color.fromARGB(255, 0, 120, 215) // 다크모드: 포켓몬 파란색
+            : const Color.fromARGB(255, 255, 203, 5), // 라이트모드: 포켓몬 노란색
+        foregroundColor: isDark
+            ? Colors.white // 다크모드: 흰색 텍스트
+            : Colors.black, // 라이트모드: 검은색 텍스트
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(18),
         ),
       ),
       child: const CommonText(
@@ -293,11 +298,11 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 hintText: '상품 설명을 입력하세요',
                 isExpanded: true,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 35),
               _buildQuantitySelector(colors), // 상품 갯수 추가
               const Spacer(),
               _buildSubmitButton(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
             ],
           ),
         ),
