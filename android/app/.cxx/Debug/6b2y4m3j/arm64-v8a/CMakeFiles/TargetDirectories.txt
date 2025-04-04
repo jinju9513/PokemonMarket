@@ -1,0 +1,2 @@
+C:/Users/jai96/OneDrive/Desktop/workspace/PokemonMarket/android/app/.cxx/Debug/6b2y4m3j/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/jai96/OneDrive/Desktop/workspace/PokemonMarket/android/app/.cxx/Debug/6b2y4m3j/arm64-v8a/CMakeFiles/rebuild_cache.dir

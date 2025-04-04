@@ -3,6 +3,7 @@ import 'package:pokemon_market/pages/home_page.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
 import 'package:pokemon_market/providers/like_provider.dart';
+import 'package:pokemon_market/pages/shopping_cart.dart'; // CartManager import 추가
 import 'package:provider/provider.dart';
 
 // 앱 진입점
@@ -12,6 +13,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeManager()),
         ChangeNotifierProvider(create: (_) => LikeProvider()),
+        ChangeNotifierProvider(create: (_) => CartManager()), // CartManager 추가
       ],
       child: const MyApp(),
     ),
