@@ -199,6 +199,9 @@ class _HomePageListState extends State<HomePageList> {
           bottom: 56,
           right: 36,
           child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32),
+            ),
             onPressed: widget.onAddProduct,
             backgroundColor: PokemonColors.primaryRed,
             child: const Icon(
