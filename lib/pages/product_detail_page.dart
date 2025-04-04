@@ -45,7 +45,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('취소', style: TextStyle(color: Colors.grey)),
+                    child:
+                        const Text('취소', style: TextStyle(color: Colors.grey)),
                   ),
                 ),
                 Container(
@@ -56,7 +57,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child:
+                        const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -81,7 +83,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child:
+                        const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -148,15 +151,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 115, // 세로 높이를 115으로 설정 (기존 높이보다 증가)
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // 패딩 조정
+        height: 115,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[900]
+              : Colors.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.1),
               blurRadius: 10,
+              spreadRadius: 0,
               offset: const Offset(0, -2),
             ),
           ],
@@ -167,39 +175,69 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.remove, color: Colors.black),
+                  icon: Icon(
+                    Icons.remove,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   onPressed: () {
                     if (_quantity > 1) setState(() => _quantity--);
                   },
                   padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32), // 버튼 크기 약간 증가
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     '$_quantity',
-                    style: const TextStyle(fontSize: 18, color: Colors.black), // 텍스트 크기 증가
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add, color: Colors.black),
+                  icon: Icon(
+                    Icons.add,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32), // 버튼 크기 약간 증가
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ],
             ),
             Text(
               '₩${getTotalPrice().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
-              style: const TextStyle(fontSize: 18, color: Colors.black54), // 텍스트 크기 증가
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[300]
+                    : Colors.black54,
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -211,13 +249,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // 버튼 패딩 조정
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 0, 120, 215) // 다크모드: 포켓몬 파란색
+                    : const Color.fromARGB(255, 255, 203, 5), // 라이트모드: 포켓몬 노란색
+                foregroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
-              child: const Text('구매하기', style: TextStyle(fontSize: 18)), // 텍스트 크기 증가
+              child: Text(
+                '구매하기',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
             ),
           ],
         ),
