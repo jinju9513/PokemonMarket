@@ -3,7 +3,7 @@ import 'package:pokemon_market/pages/edit_product_page.dart';
 import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/product_detail_page/detail_list.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
-import 'package:pokemon_market/pages/shopping_cart.dart'; // CartManager import 추가
+import 'package:pokemon_market/pages/shopping_cart.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -34,10 +34,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   void _showAddToCartDialog(BuildContext context) {
-    // 장바구니에 상품 추가
     final cartManager = Provider.of<CartManager>(context, listen: false);
-    cartManager
-        .addItem(CartItem.fromProduct(widget.product, quantity: _quantity));
+    cartManager.addItem(CartItem.fromProduct(widget.product, quantity: _quantity));
 
     showDialog(
       context: context,
@@ -51,20 +49,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text('취소', style: TextStyle(color: Colors.grey)),
+                    child: const Text('취소', style: TextStyle(color: Colors.grey)),
                   ),
                 ),
-                Container(
-                  width: 1,
-                  height: 40,
-                  color: Colors.grey[300],
-                ),
+                Container(width: 1, height: 40, color: Colors.grey[300]),
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -89,8 +81,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -129,7 +120,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pop(context, {'deleted': true});
+                Navigator.pop(context, {'deleted': true, 'id': widget.product['id']});
               },
               child: const Text('삭제', style: TextStyle(color: Colors.red)),
             ),
@@ -191,15 +182,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     if (_quantity > 1) setState(() => _quantity--);
                   },
                   padding: const EdgeInsets.all(4),
-                  constraints:
-                      const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Colors.grey[800]
-                            : Colors.grey[100],
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey[100],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 Padding(
@@ -223,15 +211,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
-                  constraints:
-                      const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Colors.grey[800]
-                            : Colors.grey[100],
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey[100],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ],
@@ -256,15 +241,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color.fromARGB(255, 0, 120, 215) // 다크모드: 포켓몬 파란색
-                    : const Color.fromARGB(255, 255, 203, 5), // 라이트모드: 포켓몬 노란색
+                    ? const Color.fromARGB(255, 0, 120, 215)
+                    : const Color.fromARGB(255, 255, 203, 5),
                 foregroundColor: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white
                     : Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
               child: Text(
