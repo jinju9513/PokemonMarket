@@ -240,7 +240,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
             blurRadius: 4,
             spreadRadius: 0.5,
           ),
-        ],
+
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -432,6 +432,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 ),
                 child: const Text('등록하기', style: TextStyle(fontSize: 16)),
               ),
+
             ],
           ),
         ),
