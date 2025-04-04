@@ -5,8 +5,10 @@ import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/pages/product_add_page.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
-import 'package:pokemon_market/pages/cart_page.dart'; //카트 매니저 추가가
+import 'package:pokemon_market/theme/custom_theme.dart';
+import 'package:pokemon_market/pages/cart_page.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,8 +16,33 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> products = [];
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _animationController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   // 상품 추가 기능
   void _addProduct() async {
@@ -65,86 +92,199 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    final isDarkMode = themeManager.isDarkMode;
 
     return Scaffold(
       appBar: CommonAppbar(
-        isDarkMode: themeManager.isDarkMode,
+        isDarkMode: isDarkMode,
         toggleTheme: themeManager.toggleTheme,
         onBackPressed: null,
       ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              isDarkMode
+                  ? 'assets/dark_pokeballs_bg.png'
+                  : 'assets/light_pokeballs_bg.png',
+            ),
+            fit: BoxFit.cover,
+            opacity: 0.05,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 피카츄 로고 이미지 추가 (애셋에서 불러오기)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset(
-                'assets/pika.png', // 애셋 경로
-                height: 100,
-                width: 100,
+            // 애니메이션 로고
+            AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: Container(
+                    height: 150,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDarkMode
+                              ? PokemonColors.primaryYellow.withOpacity(0.3)
+                              : PokemonColors.primaryRed.withOpacity(0.3),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Image.asset(
+                      'assets/pika.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            // 앱 제목
+            Text(
+              '포켓몬 마켓',
+              style: GoogleFonts.poppins(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: isDarkMode
+                    ? PokemonColors.primaryYellow
+                    : PokemonColors.primaryBlue,
+                shadows: [
+                  Shadow(
+                    blurRadius: 5,
+                    color: isDarkMode
+                        ? PokemonColors.primaryYellow.withOpacity(0.5)
+                        : PokemonColors.primaryBlue.withOpacity(0.5),
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
             ),
-            // 버튼 3개 (상품목록, 장바구니, 카드교환)
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            const SizedBox(height: 40),
+            // 버튼 컨테이너
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              decoration: BoxDecoration(
+                color: isDarkMode
+                    ? PokemonColors.cardDark
+                    : PokemonColors.cardLight,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode ? Colors.black45 : Colors.black12,
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // 상품목록 버튼
-                  ElevatedButton(
-                    onPressed: _showProductListScreen, // 상품 목록 화면으로 전환
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      minimumSize: const Size(200, 50), // 버튼 크기 조정
-                    ),
-                    child: const Text(
-                      '상품목록',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
+                  _buildButton(
+                    icon: Icons.shopping_bag_rounded,
+                    label: '상품 목록',
+                    color: PokemonColors.primaryRed,
+                    onTap: _showProductListScreen,
                   ),
                   const SizedBox(height: 16),
-                  // 장바구니 버튼
-                  ElevatedButton(
-                    onPressed: _navigateToCart, // 장바구니 페이지로 이동
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      minimumSize: const Size(200, 50), // 버튼 크기 조정
-                    ),
-                    child: const Text(
-                      '장바구니',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
+                  _buildButton(
+                    icon: Icons.shopping_cart_rounded,
+                    label: '장바구니',
+                    color: PokemonColors.primaryBlue,
+                    onTap: _navigateToCart,
                   ),
                   const SizedBox(height: 16),
-                  // 카드교환 버튼
-                  ElevatedButton(
-                    onPressed: () {
+                  _buildButton(
+                    icon: Icons.swap_horiz_rounded,
+                    label: '카드 교환',
+                    color: PokemonColors.primaryYellow,
+                    onTap: () {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
                             builder: (context) => CardTradeList()),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      minimumSize: const Size(200, 50), // 버튼 크기 조정
-                    ),
-                    child: const Text(
-                      '카드교환',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
                   ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        splashColor: color.withOpacity(0.2),
+        highlightColor: color.withOpacity(0.1),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: color.withOpacity(0.5),
+              width: 2,
+            ),
+            gradient: LinearGradient(
+              colors: [
+                Colors.transparent,
+                color.withOpacity(0.1),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: isDarkMode ? Colors.white : Colors.black87,
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: color,
+                size: 16,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -189,16 +329,97 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    final isDarkMode = themeManager.isDarkMode;
 
     return Scaffold(
       appBar: CommonAppbar(
-        isDarkMode: themeManager.isDarkMode,
+        isDarkMode: isDarkMode,
         toggleTheme: themeManager.toggleTheme,
         onBackPressed: () => Navigator.of(context).pop(),
       ),
-      body: HomePageList(
-        products: _localProducts,
-        onAddProduct: _handleAddProduct,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              isDarkMode
+                  ? 'assets/dark_pokeballs_bg.png'
+                  : 'assets/light_pokeballs_bg.png',
+            ),
+            fit: BoxFit.cover,
+            opacity: 0.05,
+          ),
+        ),
+        child: Column(
+          children: [
+            // 상단 타이틀 영역
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDarkMode
+                    ? PokemonColors.cardDark
+                    : PokemonColors.cardLight,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode ? Colors.black45 : Colors.black12,
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.shopping_bag_rounded,
+                    color: isDarkMode
+                        ? PokemonColors.primaryYellow
+                        : PokemonColors.primaryRed,
+                    size: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    '상품 목록',
+                    style: GoogleFonts.poppins(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? PokemonColors.primaryYellow.withOpacity(0.2)
+                          : PokemonColors.primaryRed.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '${_localProducts.length}개',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: isDarkMode
+                            ? PokemonColors.primaryYellow
+                            : PokemonColors.primaryRed,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // 상품 리스트
+            Expanded(
+              child: HomePageList(
+                products: _localProducts,
+                onAddProduct: _handleAddProduct,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
