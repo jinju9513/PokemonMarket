@@ -14,7 +14,7 @@ class CardTradeList extends StatefulWidget {
 final List<Map<String, dynamic>> cardTradeData = [
   {
     'userName': '피카츄짱짱123',
-    'desiredCards': ['assets/1.png', 'assets/2.png'],
+    'desiredCards': ['assets/1.png', 'assets/2.png','assets/1.png', 'assets/2.png','assets/1.png', 'assets/2.png'],
     'ownedCards': ['assets/1.png', 'assets/2.png'],
   },
   {

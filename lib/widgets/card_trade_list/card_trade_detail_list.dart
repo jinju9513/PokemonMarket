@@ -103,13 +103,13 @@ class CardTradeDetailList extends StatelessWidget {
       child: Row(
         children: cardPaths.map((path) {
           return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 1.0),
             child: GestureDetector(
               onTap: () => _showFullScreenImage(context, path),
               child: CommonImg(
                 path: path,
-                width: 60,
-                height: 60,
+                width: 100,
+                height: 100,
                 boxFit: BoxFit.contain,
               ),
             ),
