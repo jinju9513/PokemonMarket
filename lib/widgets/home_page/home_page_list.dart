@@ -197,7 +197,7 @@ class _HomePageListState extends State<HomePageList> {
         Positioned(
           //FIXME: 위치조정
           bottom: 56,
-          right: 26,
+          right: 36,
           child: FloatingActionButton(
             onPressed: widget.onAddProduct,
             backgroundColor: PokemonColors.primaryRed,
