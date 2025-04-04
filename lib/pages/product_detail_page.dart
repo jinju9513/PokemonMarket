@@ -148,7 +148,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 100, // 세로 높이를 100으로 설정 (기존 높이보다 증가)
+        height: 115, // 세로 높이를 115으로 설정 (기존 높이보다 증가)
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // 패딩 조정
         decoration: BoxDecoration(
           color: Colors.grey[100],
