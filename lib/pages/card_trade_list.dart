@@ -67,10 +67,11 @@ class _CardTradeListState extends State<CardTradeList> {
                 //   ),
                 // );
               },
+
               backgroundColor: PokemonColors.primaryRed, // 빨간색
               foregroundColor: Colors.white, // 아이콘 흰색
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(32),
               ),
               child: const Icon(Icons.add, size: 30),
               // 테마에서 색상 적용되므로 따로 설정할 필요 없음!
