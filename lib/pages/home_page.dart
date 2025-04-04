@@ -16,8 +16,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> products = [];
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -44,7 +43,6 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  // 상품 추가 기능
   void _addProduct() async {
     final result = await Navigator.push(
       context,
@@ -57,9 +55,8 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  // 상품 목록 화면으로 전환
   void _showProductListScreen() async {
-    await Navigator.of(context).push(
+    final result = await Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => ProductListScreen(
           products: products,
@@ -72,16 +69,21 @@ class _HomePageState extends State<HomePage>
               setState(() {
                 products.add(newProduct);
               });
-              return newProduct; // 추가된 상품 반환
+              return newProduct;
             }
             return null;
           },
         ),
       ),
     );
+
+    if (result != null && result is List<Map<String, dynamic>>) {
+      setState(() {
+        products = List.from(result);
+      });
+    }
   }
 
-  // 장바구니로 이동하는 메서드 추가
   void _navigateToCart() {
     Navigator.push(
       context,
@@ -115,7 +117,6 @@ class _HomePageState extends State<HomePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 애니메이션 로고
             AnimatedBuilder(
               animation: _animationController,
               builder: (context, child) {
@@ -145,7 +146,6 @@ class _HomePageState extends State<HomePage>
               },
             ),
             const SizedBox(height: 20),
-            // 앱 제목
             Text(
               '포켓몬 마켓',
               style: GoogleFonts.poppins(
@@ -166,7 +166,6 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             const SizedBox(height: 40),
-            // 버튼 컨테이너
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -208,8 +207,7 @@ class _HomePageState extends State<HomePage>
                     onTap: () {
                       Navigator.push(
                         context,
-                        CupertinoPageRoute(
-                            builder: (context) => CardTradeList()),
+                        CupertinoPageRoute(builder: (context) => CardTradeList()),
                       );
                     },
                   ),
@@ -291,7 +289,6 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-// 상품 목록 화면을 별도의 위젯으로 분리
 class ProductListScreen extends StatefulWidget {
   final List<Map<String, dynamic>> products;
   final Future<Map<String, dynamic>?> Function() onAddProduct;
@@ -312,11 +309,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   void initState() {
     super.initState();
-    // 부모로부터 전달받은 products의 복사본 생성
     _localProducts = List<Map<String, dynamic>>.from(widget.products);
   }
 
-  // 상품 추가 함수
   void _handleAddProduct() async {
     final newProduct = await widget.onAddProduct();
     if (newProduct != null) {
@@ -324,6 +319,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
         _localProducts.add(newProduct);
       });
     }
+  }
+
+  void _handleDelete(String? productId) { // String?로 변경
+    setState(() {
+      _localProducts.removeWhere((product) => product['id']?.toString() == productId);
+    });
   }
 
   @override
@@ -335,7 +336,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
       appBar: CommonAppbar(
         isDarkMode: isDarkMode,
         toggleTheme: themeManager.toggleTheme,
-        onBackPressed: () => Navigator.of(context).pop(),
+        onBackPressed: () => Navigator.of(context).pop(_localProducts),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -351,7 +352,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
         ),
         child: Column(
           children: [
-            // 상단 타이틀 영역
             Container(
               width: double.infinity,
               margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -411,11 +411,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ],
               ),
             ),
-            // 상품 리스트
             Expanded(
               child: HomePageList(
                 products: _localProducts,
                 onAddProduct: _handleAddProduct,
+                onDelete: _handleDelete,
               ),
             ),
           ],

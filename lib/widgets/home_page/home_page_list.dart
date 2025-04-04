@@ -10,11 +10,13 @@ import 'package:intl/intl.dart';
 class HomePageList extends StatefulWidget {
   final List<Map<String, dynamic>> products;
   final VoidCallback onAddProduct;
+  final Function(String?) onDelete; // String?로 변경하여 null 허용
 
   const HomePageList({
     super.key,
     required this.products,
     required this.onAddProduct,
+    required this.onDelete,
   });
 
   @override
@@ -32,7 +34,6 @@ class _HomePageListState extends State<HomePageList> {
     }
   }
 
-  // 가격 포맷팅 함수
   String formatPrice(dynamic price) {
     int priceValue;
     if (price is String) {
@@ -102,9 +103,7 @@ class _HomePageListState extends State<HomePageList> {
                           if (result != null &&
                               result is Map<String, dynamic>) {
                             if (result['deleted'] == true) {
-                              setState(() {
-                                widget.products.removeAt(index);
-                              });
+                              widget.onDelete(result['id']?.toString()); // null 체크 및 String 변환
                             } else {
                               setState(() {
                                 widget.products[index] = result;
@@ -131,7 +130,6 @@ class _HomePageListState extends State<HomePageList> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // 상품 이미지
                               Stack(
                                 children: [
                                   ClipRRect(
@@ -156,7 +154,6 @@ class _HomePageListState extends State<HomePageList> {
                                             ),
                                     ),
                                   ),
-                                  // 좋아요 버튼
                                   Positioned(
                                     top: 8,
                                     right: 8,
@@ -186,7 +183,6 @@ class _HomePageListState extends State<HomePageList> {
                                   ),
                                 ],
                               ),
-                              // 상품 정보
                               Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
@@ -329,7 +325,6 @@ class _HomePageListState extends State<HomePageList> {
             ),
             onPressed: () {
               widget.onAddProduct();
-              // 목록 업데이트를 위해 상태 갱신
               setState(() {});
             },
             backgroundColor: PokemonColors.primaryRed,
