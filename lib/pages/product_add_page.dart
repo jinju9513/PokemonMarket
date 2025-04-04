@@ -241,7 +241,12 @@ class _ProductAddPageState extends State<ProductAddPage> {
         if (_image != null) {
           imagePath = await _saveImageToLocal(_image!);
         }
+
+        // 고유 ID 생성
+        String uniqueId = DateTime.now().millisecondsSinceEpoch.toString();
+
         final product = {
+          'id': uniqueId, // 고유 ID 추가
           'name': _nameController.text,
           'price': _priceController.text,
           'description': _descriptionController.text,

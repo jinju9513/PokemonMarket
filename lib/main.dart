@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pokemon_market/pages/home_page.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
@@ -26,12 +27,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<ThemeManager>(context).isDarkMode;
+
+    // iOS 스타일 페이지 전환 설정을 추가한 테마
+    final modifiedLightTheme = lightTheme.copyWith(
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        },
+      ),
+    );
+
+    final modifiedDarkTheme = darkTheme.copyWith(
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        },
+      ),
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Pokemon Market',
-      theme: Provider.of<ThemeManager>(context).isDarkMode
-          ? darkTheme
-          : lightTheme,
+      theme: isDarkMode ? modifiedDarkTheme : modifiedLightTheme,
       home: const HomePage(),
     );
   }

@@ -25,9 +25,12 @@ class _EditProductPageState extends State<EditProductPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product['name'] ?? '');
-    _priceController = TextEditingController(text: widget.product['price']?.toString() ?? '0');
-    _quantityController = TextEditingController(text: widget.product['quantity']?.toString() ?? '0');
-    _descController = TextEditingController(text: widget.product['description'] ?? '');
+    _priceController =
+        TextEditingController(text: widget.product['price']?.toString() ?? '0');
+    _quantityController = TextEditingController(
+        text: widget.product['quantity']?.toString() ?? '0');
+    _descController =
+        TextEditingController(text: widget.product['description'] ?? '');
     _imagePath = widget.product['imagePath'];
   }
 
@@ -107,10 +110,15 @@ class _EditProductPageState extends State<EditProductPage> {
             onPressed: () {
               final updatedProduct = Map<String, dynamic>.from(widget.product);
               updatedProduct['name'] = _nameController.text;
-              updatedProduct['price'] = int.tryParse(_priceController.text) ?? 0;
-              updatedProduct['quantity'] = int.tryParse(_quantityController.text) ?? 0;
+              updatedProduct['price'] =
+                  int.tryParse(_priceController.text) ?? 0;
+              updatedProduct['quantity'] =
+                  int.tryParse(_quantityController.text) ?? 0;
               updatedProduct['description'] = _descController.text;
               updatedProduct['imagePath'] = _imagePath;
+              // id 값 확인 및 로깅
+              final id = updatedProduct['id'];
+              print('수정된 상품 ID: $id');
               Navigator.pop(context, updatedProduct);
             },
             child: const CommonText(
