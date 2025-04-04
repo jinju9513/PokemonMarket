@@ -60,7 +60,8 @@ class _ProductAddPageState extends State<ProductAddPage> {
   Future<String?> _saveImageToLocal(File image) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final String newPath = '${directory.path}/product_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final String newPath =
+          '${directory.path}/product_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final File newImage = await image.copy(newPath);
       return newImage.path;
     } catch (e) {
@@ -240,6 +241,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
             blurRadius: 4,
             spreadRadius: 0.5,
           ),
+
 
       ),
       child: Padding(
