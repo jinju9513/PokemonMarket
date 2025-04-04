@@ -7,10 +7,9 @@ import 'package:pokemon_market/providers/like_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-// 홈페이지 상품 목록 위젯 
 class HomePageList extends StatefulWidget {
-  final List<Map<String, dynamic>> products; // 상품 목록
-  final VoidCallback onAddProduct; // 상품 추가 콜백
+  final List<Map<String, dynamic>> products;
+  final VoidCallback onAddProduct;
 
   const HomePageList({
     super.key,
@@ -23,7 +22,6 @@ class HomePageList extends StatefulWidget {
 }
 
 class _HomePageListState extends State<HomePageList> {
-  // 등록 시간 포맷팅
   String formatCreatedAt(String? createdAt) {
     if (createdAt == null) return '알 수 없음';
     try {
@@ -34,11 +32,23 @@ class _HomePageListState extends State<HomePageList> {
     }
   }
 
+  // 가격 포맷팅 함수
+  String formatPrice(dynamic price) {
+    int priceValue;
+    if (price is String) {
+      priceValue = int.tryParse(price.replaceAll(',', '')) ?? 0;
+    } else if (price is int) {
+      priceValue = price;
+    } else {
+      priceValue = 0;
+    }
+    return NumberFormat('#,###').format(priceValue);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 상품 목록이 비어있을 경우 메시지 표시
         widget.products.isEmpty
             ? Center(
                 child: CommonText(
@@ -48,16 +58,16 @@ class _HomePageListState extends State<HomePageList> {
                 ),
               )
             : ListView.separated(
-                padding: const EdgeInsets.all(16), // 목록 패딩
+                padding: const EdgeInsets.all(16),
                 itemCount: widget.products.length,
                 separatorBuilder: (context, index) => Divider(
                   height: 1,
                   thickness: 1,
-                  color: Colors.grey.withOpacity(0.3), // 구분선 색상
+                  color: Colors.grey.withOpacity(0.3),
                 ),
                 itemBuilder: (context, index) {
                   final product = widget.products[index];
-                  final productId = product['id']?.toString() ?? index.toString(); // 상품 ID (없으면 인덱스 사용)
+                  final productId = product['id']?.toString() ?? index.toString();
 
                   return Consumer<LikeProvider>(
                     builder: (context, likeProvider, child) {
@@ -65,21 +75,31 @@ class _HomePageListState extends State<HomePageList> {
                       final likeCount = likeProvider.getLikeCount(productId);
 
                       return GestureDetector(
-                        onTap: () {
-                          // 상품 클릭 시 상세 페이지로 이동
-                          Navigator.push(
+                        onTap: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProductDetailPage(product: product),
                             ),
                           );
+
+                          if (result != null && result is Map<String, dynamic>) {
+                            if (result['deleted'] == true) {
+                              setState(() {
+                                widget.products.removeAt(index);
+                              });
+                            } else {
+                              setState(() {
+                                widget.products[index] = result;
+                              });
+                            }
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // 상품 이미지 (썸네일)
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: product['imagePath'] != null
@@ -97,12 +117,10 @@ class _HomePageListState extends State<HomePageList> {
                                       ),
                               ),
                               const SizedBox(width: 16),
-                              // 상품 정보
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // 상품명
                                     CommonText(
                                       text: product['name'] ?? '이름 없음',
                                       fontSize: 16,
@@ -110,16 +128,14 @@ class _HomePageListState extends State<HomePageList> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                     const SizedBox(height: 4),
-                                    // 사용자 위치 및 등록 시간 (위치 정보 제거) 현재는필요없음 
                                     CommonText(
                                       text: '포켓몬 센터 • ${formatCreatedAt(product['createdAt'])}',
                                       fontSize: 14,
                                       textColor: Colors.grey,
                                     ),
                                     const SizedBox(height: 4),
-                                    // 가격
                                     CommonText(
-                                      text: '${product['price'] ?? '0'}원',
+                                      text: '${formatPrice(product['price'])}원',
                                       fontSize: 16,
                                       textColor: Theme.of(context).textTheme.bodyLarge!.color,
                                       fontWeight: FontWeight.bold,
@@ -127,10 +143,8 @@ class _HomePageListState extends State<HomePageList> {
                                   ],
                                 ),
                               ),
-                              // 좋아요 (하트 아이콘 + 수)
                               GestureDetector(
                                 onTap: () {
-                                  // 좋아요 토글
                                   likeProvider.toggleLike(productId);
                                 },
                                 child: Row(
@@ -157,7 +171,6 @@ class _HomePageListState extends State<HomePageList> {
                   );
                 },
               ),
-        // 상품 추가 버튼 (포켓몬 테마 빨간색)
         Positioned(
           bottom: 16,
           right: 16,
