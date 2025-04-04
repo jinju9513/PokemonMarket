@@ -192,18 +192,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   },
                   padding: const EdgeInsets.all(4),
                   constraints:
-<<<<<<< HEAD
-                      const BoxConstraints(minWidth: 28, minHeight: 28),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
-=======
                       const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
                     backgroundColor:
                         Theme.of(context).brightness == Brightness.dark
                             ? Colors.grey[800]
                             : Colors.grey[100],
->>>>>>> 850918f8edebdc5d93d31f8015ce044261447f7a
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),
@@ -230,18 +224,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
                   constraints:
-<<<<<<< HEAD
-                      const BoxConstraints(minWidth: 28, minHeight: 28),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
-=======
                       const BoxConstraints(minWidth: 32, minHeight: 32),
                   style: IconButton.styleFrom(
                     backgroundColor:
                         Theme.of(context).brightness == Brightness.dark
                             ? Colors.grey[800]
                             : Colors.grey[100],
->>>>>>> 850918f8edebdc5d93d31f8015ce044261447f7a
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),
@@ -267,12 +255,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-<<<<<<< HEAD
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-=======
                 backgroundColor: Theme.of(context).brightness == Brightness.dark
                     ? const Color.fromARGB(255, 0, 120, 215) // 다크모드: 포켓몬 파란색
                     : const Color.fromARGB(255, 255, 203, 5), // 라이트모드: 포켓몬 노란색
@@ -281,7 +263,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     : Colors.black,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
->>>>>>> 850918f8edebdc5d93d31f8015ce044261447f7a
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
