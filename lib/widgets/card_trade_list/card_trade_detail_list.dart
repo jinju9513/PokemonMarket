@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_market/widgets/common_img.dart';
 
 class CardTradeDetailList extends StatelessWidget {
   final String userName;
@@ -11,6 +12,52 @@ class CardTradeDetailList extends StatelessWidget {
     required this.desiredCards,
     required this.ownedCards,
   });
+
+  // 전체 화면 이미지 보기 다이얼로그 (DetailList에서 재사용)
+  void _showFullScreenImage(BuildContext context, String? imagePath) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+          insetPadding: EdgeInsets.zero,
+          child: Stack(
+            children: [
+              Center(
+                child: InteractiveViewer(
+                  panEnabled: true,
+                  scaleEnabled: true,
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: imagePath != null
+                      ? CommonImg(
+                          path: imagePath,
+                          width: double.infinity,
+                          height: double.infinity,
+                          boxFit: BoxFit.contain,
+                        )
+                      : const CommonImg(
+                          path: 'assets/placeholder.png',
+                          width: double.infinity,
+                          height: double.infinity,
+                          boxFit: BoxFit.contain,
+                        ),
+                ),
+              ),
+              Positioned(
+                top: 40,
+                right: 20,
+                child: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,27 +84,35 @@ class CardTradeDetailList extends StatelessWidget {
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 8),
-          _buildCardRow(desiredCards),
+          _buildCardRow(context, desiredCards),
           const SizedBox(height: 16),
           Text(
             '보유카드',
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 8),
-          _buildCardRow(ownedCards),
+          _buildCardRow(context, ownedCards),
         ],
       ),
     );
   }
 
-  Widget _buildCardRow(List<String> cardPaths) {
+  Widget _buildCardRow(BuildContext context, List<String> cardPaths) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: cardPaths.map((path) {
           return Padding(
             padding: const EdgeInsets.only(right: 8.0),
-            child: Image.asset(path, width: 60),
+            child: GestureDetector(
+              onTap: () => _showFullScreenImage(context, path),
+              child: CommonImg(
+                path: path,
+                width: 60,
+                height: 60,
+                boxFit: BoxFit.cover,
+              ),
+            ),
           );
         }).toList(),
       ),
