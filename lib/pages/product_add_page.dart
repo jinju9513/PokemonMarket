@@ -7,6 +7,8 @@ import 'package:pokemon_market/theme/custom_theme.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductAddPage extends StatefulWidget {
   const ProductAddPage({super.key});
@@ -16,24 +18,20 @@ class ProductAddPage extends StatefulWidget {
 }
 
 class _ProductAddPageState extends State<ProductAddPage> {
-  final ThemeManager _themeManager = ThemeManager();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  File? _image; // 선택된 이미지 저장
-  int _quantity = 1; // 상품 갯수 상태
+  File? _image;
+  int _quantity = 1;
 
   @override
   void initState() {
     super.initState();
-    _themeManager.addListener(_onThemeChanged);
-    // 가격 입력 시 쉼표 포맷팅 리스너 추가
     _priceController.addListener(_formatPrice);
   }
 
   @override
   void dispose() {
-    _themeManager.removeListener(_onThemeChanged);
     _nameController.dispose();
     _priceController.removeListener(_formatPrice);
     _priceController.dispose();
@@ -41,11 +39,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
     super.dispose();
   }
 
-  void _onThemeChanged(bool isDark) {
-    setState(() {});
-  }
-
-  // 가격 포맷팅 함수
   void _formatPrice() {
     String text = _priceController.text.replaceAll(',', '');
     if (text.isNotEmpty) {
@@ -63,7 +56,18 @@ class _ProductAddPageState extends State<ProductAddPage> {
     }
   }
 
-  // 이미지 선택 함수
+  Future<String?> _saveImageToLocal(File image) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final String newPath = '${directory.path}/product_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final File newImage = await image.copy(newPath);
+      return newImage.path;
+    } catch (e) {
+      print('이미지 저장 실패: $e');
+      return null;
+    }
+  }
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -74,7 +78,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
     }
   }
 
-  // 색상 테마 getter
   ThemeColors _getThemeColors(bool isDark) {
     return ThemeColors(
       containerColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -85,10 +88,9 @@ class _ProductAddPageState extends State<ProductAddPage> {
     );
   }
 
-  // 이미지 선택 위젯
   Widget _buildImageSelector(ThemeColors colors) {
     return GestureDetector(
-      onTap: _pickImage, // 이미지 선택 활성화
+      onTap: _pickImage,
       child: Container(
         height: 250,
         decoration: BoxDecoration(
@@ -125,7 +127,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
     );
   }
 
-  // 입력 필드 위젯
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
@@ -133,10 +134,12 @@ class _ProductAddPageState extends State<ProductAddPage> {
     TextInputType? keyboardType,
     String? hintText,
     bool isExpanded = false,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     final textField = TextField(
       controller: controller,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       style: TextStyle(color: colors.textColor),
       maxLines: isExpanded ? null : 1,
       expands: isExpanded,
@@ -188,7 +191,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
     );
   }
 
-  // 상품 갯수 조절 위젯
   Widget _buildQuantitySelector(ThemeColors colors) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -229,13 +231,22 @@ class _ProductAddPageState extends State<ProductAddPage> {
     );
   }
 
-  // 등록 버튼 위젯
   Widget _buildSubmitButton() {
     final isDark = _themeManager.isDarkMode;
     return ElevatedButton(
-      onPressed: () {
-        // 등록 로직 (예: 이미지, 이름, 가격, 설명, 갯수 데이터 처리)
-        Navigator.pop(context);
+      onPressed: () async {
+        String? imagePath;
+        if (_image != null) {
+          imagePath = await _saveImageToLocal(_image!);
+        }
+        final product = {
+          'name': _nameController.text,
+          'price': _priceController.text,
+          'description': _descriptionController.text,
+          'quantity': _quantity,
+          'imagePath': imagePath,
+        };
+        Navigator.pop(context, product);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: isDark
@@ -258,15 +269,15 @@ class _ProductAddPageState extends State<ProductAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = _themeManager.isDarkMode;
-    final colors = _getThemeColors(isDark);
+    final themeManager = Provider.of<ThemeManager>(context);
+    final colors = _getThemeColors(themeManager.isDarkMode);
 
     return Theme(
-      data: isDark ? darkTheme : lightTheme,
+      data: themeManager.isDarkMode ? darkTheme : lightTheme,
       child: Scaffold(
         appBar: CommonAppbar(
-          isDarkMode: isDark,
-          toggleTheme: _themeManager.toggleTheme,
+          isDarkMode: themeManager.isDarkMode,
+          toggleTheme: themeManager.toggleTheme,
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -289,6 +300,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 colors: colors,
                 keyboardType: TextInputType.number,
                 hintText: '가격을 입력하세요',
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               const SizedBox(height: 20),
               _buildInputField(
@@ -298,8 +310,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 hintText: '상품 설명을 입력하세요',
                 isExpanded: true,
               ),
-              const SizedBox(height: 35),
-              _buildQuantitySelector(colors), // 상품 갯수 추가
+
               const Spacer(),
               _buildSubmitButton(),
               const SizedBox(height: 40),
@@ -311,7 +322,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
   }
 }
 
-// 테마 색상을 관리하는 클래스
 class ThemeColors {
   final Color containerColor;
   final Color textColor;
