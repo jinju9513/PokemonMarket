@@ -59,7 +59,8 @@ class _ProductAddPageState extends State<ProductAddPage> {
   Future<String?> _saveImageToLocal(File image) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final String newPath = '${directory.path}/product_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final String newPath =
+          '${directory.path}/product_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final File newImage = await image.copy(newPath);
       return newImage.path;
     } catch (e) {
@@ -232,7 +233,8 @@ class _ProductAddPageState extends State<ProductAddPage> {
   }
 
   Widget _buildSubmitButton() {
-    final isDark = _themeManager.isDarkMode;
+    final themeManager = Provider.of<ThemeManager>(context);
+    final isDark = themeManager.isDarkMode;
     return ElevatedButton(
       onPressed: () async {
         String? imagePath;
@@ -310,7 +312,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 hintText: '상품 설명을 입력하세요',
                 isExpanded: true,
               ),
-
               const Spacer(),
               _buildSubmitButton(),
               const SizedBox(height: 40),
