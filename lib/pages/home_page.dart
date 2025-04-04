@@ -35,9 +35,12 @@ class _HomePageState extends State<HomePage> {
         isDarkMode: themeManager.isDarkMode,
         toggleTheme: themeManager.toggleTheme,
       ),
-      body: HomePageList(
-        products: products,
-        onAddProduct: _addProduct,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: HomePageList(
+          products: products,
+          onAddProduct: _addProduct,
+        ),
       ),
     );
   }
