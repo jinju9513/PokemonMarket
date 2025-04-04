@@ -45,8 +45,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text('취소', style: TextStyle(color: Colors.grey)),
+                    child: const Text('취소', style: TextStyle(color: Colors.grey)),
                   ),
                 ),
                 Container(
@@ -57,8 +56,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -83,8 +81,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child:
-                        const Text('확인', style: TextStyle(color: Colors.blue)),
+                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],
@@ -113,82 +110,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? Colors.grey[850]
-              : Colors.white,
-          title: Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.red[400],
-                size: 28,
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                '삭제 확인',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: const Text(
-            '이 상품을 삭제하시겠습니까?\n삭제된 상품은 복구할 수 없습니다.',
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.5,
-            ),
-          ),
+          title: const Text('삭제 확인'),
+          content: const Text('이 상품을 삭제하시겠습니까?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                '취소',
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.grey[400]
-                      : Colors.grey[600],
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: const Text('취소', style: TextStyle(color: Colors.grey)),
             ),
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pop(context, {'deleted': true});
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[400],
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                '삭제',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: const Text('삭제', style: TextStyle(color: Colors.red)),
             ),
-            const SizedBox(width: 8),
           ],
-          actionsPadding: const EdgeInsets.fromLTRB(8, 0, 16, 16),
         );
       },
     );
@@ -212,7 +148,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        height: 100, // 세로 높이를 100으로 설정 (기존 높이보다 증가)
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // 패딩 조정
         decoration: BoxDecoration(
           color: Colors.grey[100],
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -235,38 +172,34 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     if (_quantity > 1) setState(() => _quantity--);
                   },
                   padding: const EdgeInsets.all(4),
-                  constraints:
-                      const BoxConstraints(minWidth: 28, minHeight: 28),
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32), // 버튼 크기 약간 증가
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     '$_quantity',
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    style: const TextStyle(fontSize: 18, color: Colors.black), // 텍스트 크기 증가
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add, color: Colors.black),
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
-                  constraints:
-                      const BoxConstraints(minWidth: 28, minHeight: 28),
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32), // 버튼 크기 약간 증가
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ],
             ),
             Text(
               '₩${getTotalPrice().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
-              style: const TextStyle(fontSize: 16, color: Colors.black54),
+              style: const TextStyle(fontSize: 18, color: Colors.black54), // 텍스트 크기 증가
             ),
             ElevatedButton(
               onPressed: () {
@@ -280,13 +213,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // 버튼 패딩 조정
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
-              child: const Text('구매하기', style: TextStyle(fontSize: 16)),
+              child: const Text('구매하기', style: TextStyle(fontSize: 18)), // 텍스트 크기 증가
             ),
           ],
         ),
