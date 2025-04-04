@@ -31,12 +31,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   // 상품 목록 화면으로 전환
-  void _showProductListScreen() {
-    Navigator.of(context).push(
+  void _showProductListScreen() async {
+    await Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => ProductListScreen(
           products: products,
-          onAddProduct: _addProduct,
+          onAddProduct: () async {
+            final newProduct = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProductAddPage()),
+            );
+            if (newProduct != null && newProduct is Map<String, dynamic>) {
+              setState(() {
+                products.add(newProduct);
+              });
+              return newProduct; // 추가된 상품 반환
+            }
+            return null;
+          },
         ),
       ),
     );
@@ -140,15 +152,39 @@ class _HomePageState extends State<HomePage> {
 }
 
 // 상품 목록 화면을 별도의 위젯으로 분리
-class ProductListScreen extends StatelessWidget {
+class ProductListScreen extends StatefulWidget {
   final List<Map<String, dynamic>> products;
-  final VoidCallback onAddProduct;
+  final Future<Map<String, dynamic>?> Function() onAddProduct;
 
   const ProductListScreen({
     Key? key,
     required this.products,
     required this.onAddProduct,
   }) : super(key: key);
+
+  @override
+  State<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends State<ProductListScreen> {
+  late List<Map<String, dynamic>> _localProducts;
+
+  @override
+  void initState() {
+    super.initState();
+    // 부모로부터 전달받은 products의 복사본 생성
+    _localProducts = List<Map<String, dynamic>>.from(widget.products);
+  }
+
+  // 상품 추가 함수
+  void _handleAddProduct() async {
+    final newProduct = await widget.onAddProduct();
+    if (newProduct != null) {
+      setState(() {
+        _localProducts.add(newProduct);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,8 +197,8 @@ class ProductListScreen extends StatelessWidget {
         onBackPressed: () => Navigator.of(context).pop(),
       ),
       body: HomePageList(
-        products: products,
-        onAddProduct: onAddProduct,
+        products: _localProducts,
+        onAddProduct: _handleAddProduct,
       ),
     );
   }

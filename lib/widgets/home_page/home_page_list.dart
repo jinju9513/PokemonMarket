@@ -202,7 +202,11 @@ class _HomePageListState extends State<HomePageList> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
             ),
-            onPressed: widget.onAddProduct,
+            onPressed: () {
+              widget.onAddProduct();
+              // 목록 업데이트를 위해 상태 갱신
+              setState(() {});
+            },
             backgroundColor: PokemonColors.primaryRed,
             child: Image.asset('assets/plus_logo.png'),
           ),
