@@ -157,14 +157,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        height: 115,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[900]
+              : Colors.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.1),
               blurRadius: 10,
+              spreadRadius: 0,
               offset: const Offset(0, -2),
             ),
           ],
@@ -175,15 +181,29 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.remove, color: Colors.black),
+                  icon: Icon(
+                    Icons.remove,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   onPressed: () {
                     if (_quantity > 1) setState(() => _quantity--);
                   },
                   padding: const EdgeInsets.all(4),
                   constraints:
+<<<<<<< HEAD
                       const BoxConstraints(minWidth: 28, minHeight: 28),
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
+=======
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
+                  style: IconButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[100],
+>>>>>>> 850918f8edebdc5d93d31f8015ce044261447f7a
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),
@@ -192,17 +212,36 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     '$_quantity',
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add, color: Colors.black),
+                  icon: Icon(
+                    Icons.add,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   onPressed: () => setState(() => _quantity++),
                   padding: const EdgeInsets.all(4),
                   constraints:
+<<<<<<< HEAD
                       const BoxConstraints(minWidth: 28, minHeight: 28),
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
+=======
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
+                  style: IconButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[100],
+>>>>>>> 850918f8edebdc5d93d31f8015ce044261447f7a
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),
@@ -211,7 +250,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             Text(
               '₩${getTotalPrice().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}원',
-              style: const TextStyle(fontSize: 16, color: Colors.black54),
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[300]
+                    : Colors.black54,
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -223,15 +267,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
+<<<<<<< HEAD
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+=======
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? const Color.fromARGB(255, 0, 120, 215) // 다크모드: 포켓몬 파란색
+                    : const Color.fromARGB(255, 255, 203, 5), // 라이트모드: 포켓몬 노란색
+                foregroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+>>>>>>> 850918f8edebdc5d93d31f8015ce044261447f7a
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
-              child: const Text('구매하기', style: TextStyle(fontSize: 16)),
+              child: Text(
+                '구매하기',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
             ),
           ],
         ),

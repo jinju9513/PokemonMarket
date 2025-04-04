@@ -34,7 +34,7 @@ class DetailList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.black,
+          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
           insetPadding: EdgeInsets.zero,
           child: Stack(
             children: [
@@ -57,7 +57,7 @@ class DetailList extends StatelessWidget {
                           height: double.infinity,
                           boxFit: BoxFit.contain,
                         ),
-                ),
+              ),
               ),
               Positioned(
                 top: 40,
@@ -80,6 +80,8 @@ class DetailList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 앱바와 상단 이미지 사이 간격 추가
+          const SizedBox(height: 20), // 상단 여백 추가
           // 상단 이미지 (탭 시 전체 화면으로 보기)
           GestureDetector(
             onTap: () => _showFullScreenImage(context, product['imagePath']),

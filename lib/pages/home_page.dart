@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_market/pages/card_trade_list.dart';
 import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/widgets/home_page/home_page_list.dart';
 import 'package:pokemon_market/pages/product_add_page.dart';
@@ -117,11 +118,10 @@ class _HomePageState extends State<HomePage> {
                         // 카드교환 버튼
                         ElevatedButton(
                           onPressed: () {
-                            // TODO: 카드교환 페이지로 이동 (아직 없음)
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => CardExchangePage()), // 카드교환 페이지 추가 예정
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => CardTradeList()), // 카드교환 페이지 추가 예정
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey[300],

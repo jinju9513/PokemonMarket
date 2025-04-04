@@ -158,7 +158,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
           CommonText(text: label, fontSize: 18),
           const SizedBox(height: 10),
           Container(
-            height: 150,
+            height: 200,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: colors.containerColor,
@@ -247,6 +247,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
           'description': _descriptionController.text,
           'quantity': _quantity,
           'imagePath': imagePath,
+          'createdAt': DateTime.now().toIso8601String(),
         };
         Navigator.pop(context, product);
       },
@@ -281,41 +282,48 @@ class _ProductAddPageState extends State<ProductAddPage> {
           isDarkMode: themeManager.isDarkMode,
           toggleTheme: themeManager.toggleTheme,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              _buildImageSelector(colors),
-              const SizedBox(height: 30),
-              _buildInputField(
-                label: '상품이름',
-                controller: _nameController,
-                colors: colors,
-                hintText: '상품 이름을 입력하세요',
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  _buildImageSelector(colors),
+                  const SizedBox(height: 30),
+                  _buildInputField(
+                    label: '상품이름',
+                    controller: _nameController,
+                    colors: colors,
+                    hintText: '상품 이름을 입력하세요',
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    label: '상품가격',
+                    controller: _priceController,
+                    colors: colors,
+                    keyboardType: TextInputType.number,
+                    hintText: '가격을 입력하세요',
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    label: '상품설명',
+                    controller: _descriptionController,
+                    colors: colors,
+                    hintText: '상품 설명을 입력하세요',
+                    isExpanded: true,
+                  ),
+                  const SizedBox(height: 60),
+                  _buildSubmitButton(),
+                  const SizedBox(height: 60),
+                ],
               ),
-              const SizedBox(height: 20),
-              _buildInputField(
-                label: '상품가격',
-                controller: _priceController,
-                colors: colors,
-                keyboardType: TextInputType.number,
-                hintText: '가격을 입력하세요',
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              ),
-              const SizedBox(height: 20),
-              _buildInputField(
-                label: '상품설명',
-                controller: _descriptionController,
-                colors: colors,
-                hintText: '상품 설명을 입력하세요',
-                isExpanded: true,
-              ),
-              const Spacer(),
-              _buildSubmitButton(),
-              const SizedBox(height: 40),
-            ],
+            ),
           ),
         ),
       ),
