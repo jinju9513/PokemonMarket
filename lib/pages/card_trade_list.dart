@@ -4,6 +4,7 @@ import 'package:pokemon_market/theme/theme_manager.dart';
 import 'package:pokemon_market/widgets/card_trade_list/card_trade_detail_list.dart';
 import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:provider/provider.dart';
+import 'package:pokemon_market/pages/card_exchange_page.dart'; //chandoli21
 
 class CardTradeList extends StatefulWidget {
   @override
@@ -59,13 +60,23 @@ class _CardTradeListState extends State<CardTradeList> {
             bottom: 56,
             right: 36,
             child: FloatingActionButton(
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const CardRegisterPage(),
-                //   ),
-                // );
+              onPressed: () async {
+                final result = await Navigator.push<Map<String, dynamic>>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CardExchangePage(
+                      userName: '',
+                      desiredCards: [],
+                      ownedCards: [],
+                    ),
+                  ),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    cardTradeData.add(result);
+                  });
+                }
               },
 
               backgroundColor: PokemonColors.primaryRed, // 빨간색
