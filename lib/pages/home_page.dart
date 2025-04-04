@@ -337,12 +337,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
     final themeManager = Provider.of<ThemeManager>(context);
     final isDarkMode = themeManager.isDarkMode;
 
-    return WillPopScope(
-      onWillPop: () async {
-        // 뒤로가기 버튼 클릭 시 상품 목록 반환
-        print('WillPopScope: 상품 목록 화면 종료 (상품 ${_localProducts.length}개)');
-        Navigator.of(context).pop(_localProducts);
-        return false; // 시스템 뒤로가기는 처리하지 않음
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+          print('수동 스와이프 감지: 상품 ${_localProducts.length}개 반환');
+          Navigator.of(context).pop(_localProducts);
+        }
       },
       child: Scaffold(
         appBar: CommonAppbar(
