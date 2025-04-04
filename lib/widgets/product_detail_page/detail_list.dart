@@ -34,7 +34,7 @@ class DetailList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.black,
+          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
           insetPadding: EdgeInsets.zero,
           child: Stack(
             children: [
