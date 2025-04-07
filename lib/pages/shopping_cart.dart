@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CartItem {
+  final String id; // ID 필드 추가
   final String name;
   final int price;
   final int quantity;
   final String imagePath;
 
   CartItem({
+    required this.id, // 필수 파라미터로 변경
     required this.name,
     required this.price,
     required this.quantity,
@@ -17,6 +19,7 @@ class CartItem {
 
   CartItem copyWith({int? quantity}) {
     return CartItem(
+      id: id, // ID 유지
       name: name,
       price: price,
       quantity: quantity ?? this.quantity,
@@ -40,7 +43,12 @@ class CartItem {
       imagePath = product['imagePath'].path;
     }
 
+    // 고유 ID 가져오기 (없는 경우 현재 시간 기반 ID 생성)
+    String id = product['id']?.toString() ??
+        DateTime.now().millisecondsSinceEpoch.toString();
+
     return CartItem(
+      id: id, // ID 설정
       name: product['name'] ?? '제품명 없음',
       price: price,
       quantity: quantity,
@@ -53,13 +61,12 @@ class CartItem {
     if (identical(this, other)) return true;
     if (other is! CartItem) return false;
 
-    // 이름만 비교했을 때 문제가 발생할 수 있으므로
-    // 이름과 아이템의 ID(imagePath 사용)를 함께 비교
-    return other.name == name;
+    // ID와 이름을 모두 비교하도록 수정
+    return other.id == id;
   }
 
   @override
-  int get hashCode => name.hashCode ^ imagePath.hashCode;
+  int get hashCode => id.hashCode;
 }
 
 class CartManager extends ChangeNotifier {
@@ -68,7 +75,7 @@ class CartManager extends ChangeNotifier {
   List<CartItem> get items => List.unmodifiable(_items);
 
   void addItem(CartItem item) {
-    final index = _items.indexWhere((e) => e.name == item.name);
+    final index = _items.indexWhere((e) => e.id == item.id);
     if (index >= 0) {
       final existing = _items[index];
       _items[index] =
@@ -80,7 +87,7 @@ class CartManager extends ChangeNotifier {
   }
 
   void removeItem(CartItem item) {
-    final index = _items.indexWhere((e) => e.name == item.name);
+    final index = _items.indexWhere((e) => e.id == item.id);
     if (index >= 0) {
       _items.removeAt(index);
       notifyListeners();
@@ -88,7 +95,7 @@ class CartManager extends ChangeNotifier {
   }
 
   void updateQuantity(CartItem item, int newQuantity) {
-    final index = _items.indexWhere((e) => e.name == item.name);
+    final index = _items.indexWhere((e) => e.id == item.id);
     if (index >= 0) {
       _items[index] = item.copyWith(quantity: newQuantity);
       notifyListeners();
