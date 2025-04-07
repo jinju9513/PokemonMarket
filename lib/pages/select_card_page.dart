@@ -217,7 +217,7 @@ class _SelectCardPageState extends State<SelectCardPage>
                           children: [
                             // 카드 컨테이너
                             Padding(
-                              padding: const EdgeInsets.all(2),
+                              padding: const EdgeInsets.all(3.2),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: isDarkMode
