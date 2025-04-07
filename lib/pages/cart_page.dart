@@ -118,7 +118,7 @@ class CartPage extends StatelessWidget {
           ? null
           : Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              height: 100,
+              height: 120,
               decoration: BoxDecoration(
                 color: isDarkMode
                     ? PokemonColors.cardDark
