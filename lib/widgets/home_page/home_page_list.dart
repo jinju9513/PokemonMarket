@@ -23,7 +23,26 @@ class HomePageList extends StatefulWidget {
   State<HomePageList> createState() => _HomePageListState();
 }
 
-class _HomePageListState extends State<HomePageList> {
+class _HomePageListState extends State<HomePageList>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _animationController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   String formatCreatedAt(String? createdAt) {
     if (createdAt == null) return '알 수 없음';
     try {
@@ -54,27 +73,96 @@ class _HomePageListState extends State<HomePageList> {
       children: [
         widget.products.isEmpty
             ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/empty_pokemon.png',
-                      width: 120,
-                      height: 120,
+                child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: 1.0 + (_animationController.value * 0.05),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(30),
+                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? PokemonColors.cardDark
+                          : PokemonColors.cardLight,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: isDarkMode
+                            ? PokemonColors.primaryBlue.withOpacity(0.2)
+                            : PokemonColors.primaryRed.withOpacity(0.2),
+                        width: 2,
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                    CommonText(
-                      text: '등록된 상품이 없습니다',
-                      fontSize: 18,
-                      textColor: Theme.of(context).textTheme.bodyMedium!.color,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/empty_pokemon.png',
+                          width: 120,
+                          height: 120,
+                        ),
+                        const SizedBox(height: 16),
+                        CommonText(
+                          text: '등록된 상품이 없습니다',
+                          fontSize: 18,
+                          textColor:
+                              Theme.of(context).textTheme.bodyMedium!.color,
+                        ),
+                        const SizedBox(height: 8),
+                        CommonText(
+                          text: '새로운 상품을 등록해보세요!',
+                          fontSize: 14,
+                          textColor: Colors.grey,
+                        ),
+                        const SizedBox(height: 24),
+                        OutlinedButton.icon(
+                          onPressed: widget.onAddProduct,
+                          icon: Icon(
+                            Icons.add_circle_outline,
+                            color: isDarkMode
+                                ? PokemonColors.primaryYellow
+                                : PokemonColors.primaryRed,
+                          ),
+                          label: Text(
+                            '상품 등록하기',
+                            style: TextStyle(
+                              color: isDarkMode
+                                  ? PokemonColors.primaryYellow
+                                  : PokemonColors.primaryRed,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                            side: BorderSide(
+                              color: isDarkMode
+                                  ? PokemonColors.primaryYellow
+                                  : PokemonColors.primaryRed,
+                              width: 2,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    CommonText(
-                      text: '새로운 상품을 등록해보세요!',
-                      fontSize: 14,
-                      textColor: Colors.grey,
-                    ),
-                  ],
+                  ),
                 ),
               )
             : ListView.builder(
@@ -325,18 +413,64 @@ class _HomePageListState extends State<HomePageList> {
         Positioned(
           bottom: 56,
           right: 36,
-          child: FloatingActionButton(
-            heroTag: 'add_product',
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(32),
-            ),
-            onPressed: () {
-              widget.onAddProduct();
-              setState(() {});
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: 1.0 + (_animationController.value * 0.1),
+                child: child,
+              );
             },
-            backgroundColor: PokemonColors.primaryRed,
-            child: Image.asset('assets/plus_logo.png'),
+            child: Container(
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDarkMode
+                      ? [
+                          PokemonColors.primaryBlue,
+                          PokemonColors.primaryBlue.withOpacity(0.8),
+                        ]
+                      : [
+                          PokemonColors.primaryRed,
+                          PokemonColors.primaryRed.withOpacity(0.8),
+                        ],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode
+                        ? PokemonColors.primaryBlue.withOpacity(0.4)
+                        : PokemonColors.primaryRed.withOpacity(0.4),
+                    blurRadius: 12,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    widget.onAddProduct();
+                    setState(() {});
+                  },
+                  customBorder: const CircleBorder(),
+                  splashColor: Colors.white24,
+                  highlightColor: Colors.white10,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/plus_logo.png',
+                      color: Colors.white,
+                      width: 32,
+                      height: 32,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ],
