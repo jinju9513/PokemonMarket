@@ -107,6 +107,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           'assets/plus_logo.png',
                           width: 60,
                           height: 60,
+                          color: isDarkMode
+                              ? PokemonColors.primaryYellow
+                              : PokemonColors.primaryRed,
                         ),
                       ),
                     ),
