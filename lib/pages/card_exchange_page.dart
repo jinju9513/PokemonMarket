@@ -40,51 +40,48 @@ class _CardExchangePageState extends State<CardExchangePage> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
 
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CommonAppbar(
         isDarkMode: themeManager.isDarkMode,
         toggleTheme: themeManager.toggleTheme,
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
+            Center(
               child: Text(
                 '카드 교환하기',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
             ),
             const SizedBox(height: 20),
-            _buildEditableTextField('닉네임', _nameController),
+            _buildEditableTextField('닉네임', _nameController, textColor),
             const SizedBox(height: 16),
-            _buildCardSelection(
-              '원하는 카드',
-              selectedDesiredCards,
-              (selectedCard) {
-                setState(() {
-                  selectedDesiredCards.add(selectedCard);
-                });
-              },
-            ),
+            _buildCardSelection('원하는 카드', selectedDesiredCards, (selectedCard) {
+              setState(() {
+                selectedDesiredCards.add(selectedCard);
+              });
+            }, textColor),
             const SizedBox(height: 16),
-            _buildCardSelection(
-              '보유카드',
-              selectedOwnedCards,
-              (selectedCard) {
-                setState(() {
-                  selectedOwnedCards.add(selectedCard);
-                });
-              },
-            ),
+            _buildCardSelection('보유카드', selectedOwnedCards, (selectedCard) {
+              setState(() {
+                selectedOwnedCards.add(selectedCard);
+              });
+            }, textColor),
             const Spacer(),
-            _buildRegisterButton(),
+            _buildRegisterButton(textColor),
           ],
         ),
       ),
@@ -92,11 +89,11 @@ class _CardExchangePageState extends State<CardExchangePage> {
   }
 
   Widget _buildEditableTextField(
-      String label, TextEditingController controller) {
+      String label, TextEditingController controller, Color? textColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 16)),
+        Text(label, style: TextStyle(fontSize: 16, color: textColor)),
         const SizedBox(height: 4),
         TextField(
           controller: controller,
@@ -104,23 +101,24 @@ class _CardExchangePageState extends State<CardExchangePage> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             filled: true,
-            fillColor: Colors.grey[300],
+            fillColor: Theme.of(context).cardColor,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
           ),
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: textColor),
         ),
       ],
     );
   }
 
-  Widget _buildCardSelection(
-      String label, List<String> cards, Function(String) onCardSelected) {
+  Widget _buildCardSelection(String label, List<String> cards,
+      Function(String) onCardSelected, Color? textColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 16)),
+        Text(label, style: TextStyle(fontSize: 16, color: textColor)),
         const SizedBox(height: 4),
         GestureDetector(
           onTap: () async {
@@ -139,13 +137,13 @@ class _CardExchangePageState extends State<CardExchangePage> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('카드 선택', style: TextStyle(fontSize: 16)),
+                Text('카드 선택', style: TextStyle(fontSize: 16, color: textColor)),
                 if (cards.isNotEmpty)
                   Row(
                     children: cards
@@ -163,7 +161,7 @@ class _CardExchangePageState extends State<CardExchangePage> {
     );
   }
 
-  Widget _buildRegisterButton() {
+  Widget _buildRegisterButton(Color? textColor) {
     return GestureDetector(
       onTap: () {
         Navigator.pop(context, {
@@ -176,13 +174,17 @@ class _CardExchangePageState extends State<CardExchangePage> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.grey[400],
+          color: Theme.of(context).primaryColor.withOpacity(0.8),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             '등록하기',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ),
       ),
