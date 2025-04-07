@@ -303,11 +303,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       child: Container(
                         width: 70,
                         height: 70,
-                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: isDarkMode
-                              ? PokemonColors.primaryBlue.withOpacity(0.1)
-                              : PokemonColors.primaryRed.withOpacity(0.1),
+                          color: PokemonColors.primaryRed,
                           shape: BoxShape.circle,
                         ),
                         child: Image.asset(
