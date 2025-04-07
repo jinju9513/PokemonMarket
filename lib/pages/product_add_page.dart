@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 
 class ProductAddPage extends StatefulWidget {
   const ProductAddPage({super.key});
@@ -248,7 +249,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
         final product = {
           'id': uniqueId, // 고유 ID 추가
           'name': _nameController.text,
-          'price': _priceController.text,
+          'price': int.tryParse(_priceController.text.replaceAll(',', '')) ?? 0,
           'description': _descriptionController.text,
           'quantity': _quantity,
           'imagePath': imagePath,

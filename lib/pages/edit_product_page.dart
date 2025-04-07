@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pokemon_market/widgets/common_img.dart';
 import 'package:pokemon_market/widgets/common_text.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class EditProductPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -25,8 +27,23 @@ class _EditProductPageState extends State<EditProductPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product['name'] ?? '');
-    _priceController =
-        TextEditingController(text: widget.product['price']?.toString() ?? '0');
+
+    // 가격에 쉼표 포맷팅 적용
+    dynamic priceValue = widget.product['price'] ?? 0;
+    String formattedPrice;
+    if (priceValue is int) {
+      formattedPrice = NumberFormat('#,###').format(priceValue);
+    } else if (priceValue is String) {
+      int? parsedPrice = int.tryParse(priceValue.replaceAll(',', ''));
+      formattedPrice =
+          parsedPrice != null ? NumberFormat('#,###').format(parsedPrice) : '0';
+    } else {
+      formattedPrice = '0';
+    }
+
+    _priceController = TextEditingController(text: formattedPrice);
+    _priceController.addListener(_formatPrice);
+
     _quantityController = TextEditingController(
         text: widget.product['quantity']?.toString() ?? '0');
     _descController =
@@ -37,6 +54,7 @@ class _EditProductPageState extends State<EditProductPage> {
   @override
   void dispose() {
     _nameController.dispose();
+    _priceController.removeListener(_formatPrice);
     _priceController.dispose();
     _quantityController.dispose();
     _descController.dispose();
@@ -111,7 +129,7 @@ class _EditProductPageState extends State<EditProductPage> {
               final updatedProduct = Map<String, dynamic>.from(widget.product);
               updatedProduct['name'] = _nameController.text;
               updatedProduct['price'] =
-                  int.tryParse(_priceController.text) ?? 0;
+                  int.tryParse(_priceController.text.replaceAll(',', '')) ?? 0;
               updatedProduct['quantity'] =
                   int.tryParse(_quantityController.text) ?? 0;
               updatedProduct['description'] = _descController.text;
@@ -182,18 +200,15 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
               const SizedBox(height: 16),
               // 가격
-              TextField(
+              _buildInputField(
+                label: '상품가격',
                 controller: _priceController,
-                decoration: const InputDecoration(
-                  label: CommonText(
-                    text: '가격',
-                    fontSize: 14,
-                    textColor: Colors.grey,
-                  ),
-                  border: OutlineInputBorder(),
-                ),
+                colors: Colors.grey,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(fontSize: 16),
+                hintText: '가격을 입력하세요',
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
               ),
               const SizedBox(height: 16),
               // 재고 수량
@@ -231,5 +246,48 @@ class _EditProductPageState extends State<EditProductPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildInputField({
+    required String label,
+    required TextEditingController controller,
+    required Color colors,
+    required TextInputType keyboardType,
+    required String hintText,
+    required List<TextInputFormatter> inputFormatters,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        label: CommonText(
+          text: label,
+          fontSize: 14,
+          textColor: colors,
+        ),
+        border: OutlineInputBorder(),
+        hintText: hintText,
+      ),
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      style: const TextStyle(fontSize: 16),
+    );
+  }
+
+  // 가격 입력 시 쉼표 포맷팅 적용
+  void _formatPrice() {
+    String text = _priceController.text.replaceAll(',', '');
+    if (text.isNotEmpty) {
+      final number = int.tryParse(text);
+      if (number != null) {
+        final formatter = NumberFormat('#,###');
+        String formatted = formatter.format(number);
+        if (formatted != _priceController.text) {
+          _priceController.value = TextEditingValue(
+            text: formatted,
+            selection: TextSelection.collapsed(offset: formatted.length),
+          );
+        }
+      }
+    }
   }
 }
