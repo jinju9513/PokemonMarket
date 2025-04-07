@@ -731,7 +731,10 @@ class _ProductAddPageState extends State<ProductAddPage> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: Colors.transparent,
+              color: isDarkMode
+                  ? Colors.transparent
+                  : PokemonColors.primaryRed.withOpacity(0.1),
+              width: 1.0,
             ),
           ),
           focusedBorder: OutlineInputBorder(
