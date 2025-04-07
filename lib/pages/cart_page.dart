@@ -7,6 +7,7 @@ import 'package:pokemon_market/widgets/common_text.dart';
 import 'package:pokemon_market/widgets/common_appbar.dart';
 import 'package:pokemon_market/theme/theme_manager.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
+import 'dart:math' as math;
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -122,7 +123,9 @@ class CartPage extends StatelessWidget {
                               width: 36,
                               height: 36,
                               decoration: BoxDecoration(
-                                color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                                color: isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: IconButton(
@@ -151,7 +154,7 @@ class CartPage extends StatelessWidget {
         height: 130,
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
           ),
@@ -177,13 +180,310 @@ class CartPage extends StatelessWidget {
               onPressed: items.isEmpty
                   ? null
                   : () {
-                      // TODO 구매하기 기능추가
+                      _showPurchaseConfirmDialog(context, cartManager);
                     },
               child: const CommonText(text: '구매하기', fontSize: 16),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showPurchaseConfirmDialog(
+      BuildContext context, CartManager cartManager) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final totalItems = cartManager.items.length;
+    final totalPrice = cartManager.totalPrice;
+
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
+      barrierLabel: 'dismiss',
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: Dialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                width: 300,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? PokemonColors.cardDark
+                      : PokemonColors.cardLight,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: isDarkMode
+                        ? PokemonColors.primaryBlue.withOpacity(0.3)
+                        : PokemonColors.primaryRed.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 포켓볼 아이콘 (애니메이션)
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 700),
+                      tween: Tween<double>(begin: 0, end: 2 * math.pi),
+                      builder: (context, value, child) {
+                        return Transform.rotate(
+                          angle: math.sin(value) * 0.05,
+                          child: child,
+                        );
+                      },
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: isDarkMode
+                              ? PokemonColors.primaryBlue.withOpacity(0.1)
+                              : PokemonColors.primaryRed.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.asset(
+                          'assets/plus_logo.png',
+                          width: 60,
+                          height: 60,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 제목
+                    Text(
+                      '구매 확인',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // 내용
+                    Text(
+                      '$totalItems개 상품을 총 ${NumberFormat('#,###').format(totalPrice)}원에 구입하시겠습니까?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isDarkMode ? Colors.white70 : Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 버튼
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // 취소 버튼
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => Navigator.of(context).pop(),
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Text(
+                                '취소',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+
+                        // 구매하기 버튼
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              _showPurchaseCompleteDialog(context, cartManager);
+                            },
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: isDarkMode
+                                    ? PokemonColors.primaryBlue
+                                    : PokemonColors.primaryYellow,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '구매하기',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPurchaseCompleteDialog(
+      BuildContext context, CartManager cartManager) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
+      barrierLabel: 'dismiss',
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: Dialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                width: 300,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? PokemonColors.cardDark
+                      : PokemonColors.cardLight,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: isDarkMode
+                        ? PokemonColors.primaryBlue.withOpacity(0.3)
+                        : PokemonColors.primaryRed.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 성공 아이콘
+                    Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? PokemonColors.primaryBlue.withOpacity(0.1)
+                            : PokemonColors.primaryYellow.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.check_circle_outline,
+                        size: 50,
+                        color: isDarkMode
+                            ? PokemonColors.primaryBlue
+                            : PokemonColors.primaryYellow,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 제목
+                    Text(
+                      '구매 완료',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // 내용
+                    Text(
+                      '구매가 완료되었습니다.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isDarkMode ? Colors.white70 : Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 확인 버튼
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        cartManager.clearCart(); // 장바구니 비우기
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isDarkMode
+                              ? PokemonColors.primaryBlue
+                              : PokemonColors.primaryYellow,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '확인',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -240,4 +540,4 @@ class CartPage extends StatelessWidget {
       ),
     );
   }
-} 
+}
