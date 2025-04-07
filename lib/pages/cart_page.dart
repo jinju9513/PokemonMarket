@@ -9,8 +9,32 @@ import 'package:pokemon_market/theme/theme_manager.dart';
 import 'package:pokemon_market/theme/custom_theme.dart';
 import 'dart:math' as math;
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _animationController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -213,55 +237,101 @@ class CartPage extends StatelessWidget {
 
   Widget _buildEmptyCart(bool isDarkMode) {
     return Center(
-      child: Container(
-        width: 280,
-        padding: const EdgeInsets.all(30),
-        decoration: BoxDecoration(
-          color: isDarkMode ? PokemonColors.cardDark : PokemonColors.cardLight,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 0,
-              offset: const Offset(0, 2),
-            ),
-          ],
-          border: Border.all(
-            color: isDarkMode
-                ? PokemonColors.primaryBlue.withOpacity(0.2)
-                : PokemonColors.primaryRed.withOpacity(0.2),
-            width: 2,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.shopping_cart_outlined,
-              size: 80,
+      child: AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: 1.0 + (_animationController.value * 0.05),
+            child: child,
+          );
+        },
+        child: Container(
+          width: 280,
+          padding: const EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            color:
+                isDarkMode ? PokemonColors.cardDark : PokemonColors.cardLight,
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 0,
+                offset: const Offset(0, 2),
+              ),
+            ],
+            border: Border.all(
               color: isDarkMode
-                  ? PokemonColors.primaryYellow.withOpacity(0.7)
-                  : PokemonColors.primaryRed.withOpacity(0.7),
+                  ? PokemonColors.primaryBlue.withOpacity(0.2)
+                  : PokemonColors.primaryRed.withOpacity(0.2),
+              width: 2,
             ),
-            const SizedBox(height: 24),
-            Text(
-              '장바구니가 비었습니다',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.shopping_cart_outlined,
+                size: 80,
+                color: isDarkMode
+                    ? PokemonColors.primaryYellow.withOpacity(0.7)
+                    : PokemonColors.primaryRed.withOpacity(0.7),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '포켓몬 상품을 담아보세요!',
-              style: TextStyle(
-                fontSize: 16,
-                color: isDarkMode ? Colors.white70 : Colors.black54,
+              const SizedBox(height: 24),
+              Text(
+                '장바구니가 비었습니다',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Text(
+                '포켓몬 상품을 담아보세요!',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 20),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(
+                  Icons.shopping_bag_outlined,
+                  color: isDarkMode
+                      ? PokemonColors.primaryYellow
+                      : PokemonColors.primaryRed,
+                ),
+                label: Text(
+                  '상품 쇼핑하기',
+                  style: TextStyle(
+                    color: isDarkMode
+                        ? PokemonColors.primaryYellow
+                        : PokemonColors.primaryRed,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  side: BorderSide(
+                    color: isDarkMode
+                        ? PokemonColors.primaryYellow
+                        : PokemonColors.primaryRed,
+                    width: 2,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
