@@ -216,39 +216,43 @@ class _SelectCardPageState extends State<SelectCardPage>
                           fit: StackFit.expand,
                           children: [
                             // 카드 컨테이너
-                            Container(
-                              decoration: BoxDecoration(
-                                color: isDarkMode
-                                    ? Colors.black.withOpacity(0.3)
-                                    : Colors.grey[100],
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? (isDarkMode
-                                          ? PokemonColors.primaryYellow
-                                          : PokemonColors.primaryRed)
-                                      : Colors.transparent,
-                                  width: 3,
+                            Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isDarkMode
+                                      ? Colors.black.withOpacity(0.3)
+                                      : Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? (isDarkMode
+                                            ? PokemonColors.primaryYellow
+                                            : PokemonColors.primaryRed)
+                                        : Colors.transparent,
+                                    width: 3,
+                                  ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: (isDarkMode
+                                                    ? PokemonColors
+                                                        .primaryYellow
+                                                    : PokemonColors.primaryRed)
+                                                .withOpacity(0.5),
+                                            blurRadius: 8,
+                                            spreadRadius: -2,
+                                          ),
+                                        ]
+                                      : null,
                                 ),
-                                boxShadow: isSelected
-                                    ? [
-                                        BoxShadow(
-                                          color: (isDarkMode
-                                                  ? PokemonColors.primaryYellow
-                                                  : PokemonColors.primaryRed)
-                                              .withOpacity(0.5),
-                                          blurRadius: 8,
-                                          spreadRadius: -2,
-                                        ),
-                                      ]
-                                    : null,
-                              ),
-                              padding: const EdgeInsets.all(4),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  card,
-                                  fit: BoxFit.cover,
+                                padding: const EdgeInsets.all(4),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    card,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
