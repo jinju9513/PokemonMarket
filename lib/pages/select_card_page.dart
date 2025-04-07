@@ -16,16 +16,18 @@ class _SelectCardPageState extends State<SelectCardPage> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
+    final isDarkMode = themeManager.isDarkMode;
+    final theme = Theme.of(context);
 
     final List<String> cardAssets =
         List.generate(20, (index) => 'assets/${index + 1}.png');
 
     return Scaffold(
       appBar: CommonAppbar(
-        isDarkMode: themeManager.isDarkMode,
+        isDarkMode: isDarkMode,
         toggleTheme: themeManager.toggleTheme,
       ),
-      backgroundColor: Colors.black87,
+      backgroundColor: isDarkMode ? Colors.black87 : Colors.white,
       body: Column(
         children: [
           Expanded(
@@ -61,7 +63,7 @@ class _SelectCardPageState extends State<SelectCardPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Card(
-                        color: Colors.white24,
+                        color: isDarkMode ? Colors.white24 : Colors.grey[100],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -82,6 +84,7 @@ class _SelectCardPageState extends State<SelectCardPage> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(48),
                 backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
               ),
               onPressed: selectedCards.isNotEmpty
                   ? () {
