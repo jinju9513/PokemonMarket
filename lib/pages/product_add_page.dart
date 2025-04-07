@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
+import 'dart:math' as math;
 
 class ProductAddPage extends StatefulWidget {
   const ProductAddPage({super.key});
@@ -24,6 +25,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
   final TextEditingController _descriptionController = TextEditingController();
   File? _image;
   int _quantity = 1;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -70,208 +72,190 @@ class _ProductAddPageState extends State<ProductAddPage> {
     }
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(ImageSource source) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: source);
+
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
 
-  ThemeColors _getThemeColors(bool isDark) {
-    return ThemeColors(
-      containerColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
-      textColor: isDark ? Colors.white : Colors.black,
-      hintColor: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-      imageAreaColor: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-      imageIconColor: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
-    );
-  }
+  void _showImageSourceDialog() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-  Widget _buildImageSelector(ThemeColors colors) {
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Container(
-        height: 250,
-        decoration: BoxDecoration(
-          color: colors.imageAreaColor,
-          borderRadius: BorderRadius.circular(12),
-          image: _image != null
-              ? DecorationImage(
-                  image: FileImage(_image!),
-                  fit: BoxFit.cover,
-                )
-              : null,
-        ),
-        child: _image == null
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add_a_photo,
-                      size: 50,
-                      color: colors.imageIconColor,
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
+      barrierLabel: 'dismiss',
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: Dialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                width: 300,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? PokemonColors.cardDark
+                      : PokemonColors.cardLight,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
                     ),
-                    const SizedBox(height: 10),
-                    CommonText(
-                      text: 'image선택',
-                      fontSize: 18,
-                      textColor: colors.imageIconColor,
+                  ],
+                  border: Border.all(
+                    color: isDarkMode
+                        ? PokemonColors.primaryBlue.withOpacity(0.3)
+                        : PokemonColors.primaryRed.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 포켓볼 아이콘 (애니메이션)
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 700),
+                      tween: Tween<double>(begin: 0, end: 2 * math.pi),
+                      builder: (context, value, child) {
+                        return Transform.rotate(
+                          angle: math.sin(value) * 0.05,
+                          child: child,
+                        );
+                      },
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: isDarkMode
+                              ? PokemonColors.primaryBlue.withOpacity(0.1)
+                              : PokemonColors.primaryRed.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.asset(
+                          'assets/plus_logo.png',
+                          width: 60,
+                          height: 60,
+                          color: isDarkMode
+                              ? PokemonColors.primaryYellow
+                              : PokemonColors.primaryRed,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 제목
+                    Text(
+                      '이미지 선택',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 갤러리 옵션
+                    _buildImageSourceOption(
+                      icon: Icons.photo_library_rounded,
+                      title: '갤러리에서 선택',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _pickImage(ImageSource.gallery);
+                      },
+                      isDarkMode: isDarkMode,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // 카메라 옵션
+                    _buildImageSourceOption(
+                      icon: Icons.camera_alt_rounded,
+                      title: '카메라로 촬영',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _pickImage(ImageSource.camera);
+                      },
+                      isDarkMode: isDarkMode,
                     ),
                   ],
                 ),
-              )
-            : null,
-      ),
-    );
-  }
-
-  Widget _buildInputField({
-    required String label,
-    required TextEditingController controller,
-    required ThemeColors colors,
-    TextInputType? keyboardType,
-    String? hintText,
-    bool isExpanded = false,
-    List<TextInputFormatter>? inputFormatters,
-  }) {
-    final textField = TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      style: TextStyle(color: colors.textColor),
-      maxLines: isExpanded ? null : 1,
-      expands: isExpanded,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: hintText,
-        hintStyle: TextStyle(color: colors.hintColor),
-      ),
-    );
-
-    if (isExpanded) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CommonText(text: label, fontSize: 18),
-          const SizedBox(height: 10),
-          Container(
-            height: 200,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: colors.containerColor,
-              borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: textField,
           ),
-        ],
-      );
-    }
-
-    return Row(
-      children: [
-        CommonText(text: label, fontSize: 18),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: colors.containerColor,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: textField,
-          ),
-        ),
-        if (label == '상품가격') ...[
-          const SizedBox(width: 10),
-          CommonText(text: '원', fontSize: 18),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildQuantitySelector(ThemeColors colors) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          onPressed: () {
-            if (_quantity > 1) {
-              setState(() {
-                _quantity--;
-              });
-            }
-          },
-          icon: const Icon(Icons.remove),
-          color: colors.textColor,
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(
-            color: colors.containerColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: CommonText(
-            text: '$_quantity',
-            fontSize: 18,
-            textColor: colors.textColor,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            setState(() {
-              _quantity++;
-            });
-          },
-          icon: const Icon(Icons.add),
-          color: colors.textColor,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    final themeManager = Provider.of<ThemeManager>(context);
-    final isDark = themeManager.isDarkMode;
-    return ElevatedButton(
-      onPressed: () async {
-        String? imagePath;
-        if (_image != null) {
-          imagePath = await _saveImageToLocal(_image!);
-        }
-
-        // 고유 ID 생성
-        String uniqueId = DateTime.now().millisecondsSinceEpoch.toString();
-
-        final product = {
-          'id': uniqueId, // 고유 ID 추가
-          'name': _nameController.text,
-          'price': int.tryParse(_priceController.text.replaceAll(',', '')) ?? 0,
-          'description': _descriptionController.text,
-          'quantity': _quantity,
-          'imagePath': imagePath,
-          'createdAt': DateTime.now().toIso8601String(),
-        };
-        Navigator.pop(context, product);
+        );
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isDark
-            ? const Color.fromARGB(255, 0, 120, 215) // 다크모드: 포켓몬 파란색
-            : const Color.fromARGB(255, 255, 203, 5), // 라이트모드: 포켓몬 노란색
-        foregroundColor: isDark
-            ? Colors.white // 다크모드: 흰색 텍스트
-            : Colors.black, // 라이트모드: 검은색 텍스트
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+    );
+  }
+
+  Widget _buildImageSourceOption({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    required bool isDarkMode,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isDarkMode
+              ? Colors.black.withOpacity(0.2)
+              : Colors.grey.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDarkMode
+                ? PokemonColors.primaryBlue.withOpacity(0.3)
+                : PokemonColors.primaryRed.withOpacity(0.3),
+            width: 1,
+          ),
         ),
-      ),
-      child: const CommonText(
-        text: '등록하기',
-        fontSize: 18,
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isDarkMode
+                  ? PokemonColors.primaryYellow
+                  : PokemonColors.primaryRed,
+              size: 28,
+            ),
+            const SizedBox(width: 16),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -279,54 +263,308 @@ class _ProductAddPageState extends State<ProductAddPage> {
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
-    final colors = _getThemeColors(themeManager.isDarkMode);
+    final isDarkMode = themeManager.isDarkMode;
 
-    return Theme(
-      data: themeManager.isDarkMode ? darkTheme : lightTheme,
-      child: Scaffold(
-        appBar: CommonAppbar(
-          isDarkMode: themeManager.isDarkMode,
-          toggleTheme: themeManager.toggleTheme,
+    return Scaffold(
+      appBar: CommonAppbar(
+        isDarkMode: themeManager.isDarkMode,
+        toggleTheme: themeManager.toggleTheme,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDarkMode
+                ? [
+                    PokemonColors.backgroundDark,
+                    PokemonColors.backgroundDark.withOpacity(0.8),
+                  ]
+                : [
+                    PokemonColors.backgroundLight,
+                    Colors.white,
+                  ],
+          ),
         ),
-        body: GestureDetector(
+        child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  _buildImageSelector(colors),
+                  // 이미지 선택 및 미리보기
+                  _buildImagePreviewSection(isDarkMode),
+                  const SizedBox(height: 24),
+
+                  // 상품 정보 섹션
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? PokemonColors.cardDark
+                          : PokemonColors.cardLight,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: isDarkMode
+                            ? PokemonColors.primaryBlue.withOpacity(0.2)
+                            : PokemonColors.primaryRed.withOpacity(0.2),
+                        width: 2,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 섹션 타이틀
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: isDarkMode
+                                  ? PokemonColors.primaryYellow
+                                  : PokemonColors.primaryRed,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '상품 정보',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+
+                        // 상품명
+                        _buildTextField(
+                          controller: _nameController,
+                          labelText: '상품이름',
+                          hintText: '상품 이름을 입력하세요',
+                          icon: Icons.shopping_bag_outlined,
+                          isDarkMode: isDarkMode,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // 가격
+                        _buildTextField(
+                          controller: _priceController,
+                          labelText: '상품가격',
+                          hintText: '가격을 입력하세요',
+                          icon: Icons.monetization_on_outlined,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          isDarkMode: isDarkMode,
+                          prefix: '₩',
+                        ),
+                        const SizedBox(height: 16),
+
+                        // 재고 수량
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.inventory_2_outlined,
+                                    color: isDarkMode
+                                        ? PokemonColors.primaryYellow
+                                        : PokemonColors.primaryRed,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '수량',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // 감소 버튼
+                                  InkWell(
+                                    onTap: () {
+                                      if (_quantity > 1) {
+                                        setState(() {
+                                          _quantity--;
+                                        });
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: isDarkMode
+                                            ? Colors.black26
+                                            : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: isDarkMode
+                                            ? PokemonColors.primaryYellow
+                                            : PokemonColors.primaryRed,
+                                      ),
+                                    ),
+                                  ),
+
+                                  // 수량 표시
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: isDarkMode
+                                          ? Colors.black12
+                                          : Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: isDarkMode
+                                            ? Colors.grey.withOpacity(0.3)
+                                            : Colors.grey.withOpacity(0.3),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '$_quantity',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+
+                                  // 증가 버튼
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _quantity++;
+                                      });
+                                    },
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: isDarkMode
+                                            ? Colors.black26
+                                            : Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: isDarkMode
+                                            ? PokemonColors.primaryYellow
+                                            : PokemonColors.primaryRed,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // 설명
+                        _buildTextField(
+                          controller: _descriptionController,
+                          labelText: '상품설명',
+                          hintText: '상품에 대한 설명을 입력하세요',
+                          icon: Icons.description_outlined,
+                          maxLines: 5,
+                          isDarkMode: isDarkMode,
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // 등록 버튼
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              String? imagePath;
+                              if (_image != null) {
+                                imagePath = await _saveImageToLocal(_image!);
+                              }
+
+                              // 고유 ID 생성
+                              String uniqueId = DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString();
+
+                              final product = {
+                                'id': uniqueId,
+                                'name': _nameController.text,
+                                'price': int.tryParse(_priceController.text
+                                        .replaceAll(',', '')) ??
+                                    0,
+                                'description': _descriptionController.text,
+                                'quantity': _quantity,
+                                'imagePath': imagePath,
+                                'createdAt': DateTime.now().toIso8601String(),
+                              };
+                              Navigator.pop(context, product);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isDarkMode
+                                  ? PokemonColors.primaryBlue
+                                  : PokemonColors.primaryYellow,
+                              foregroundColor:
+                                  isDarkMode ? Colors.white : Colors.black,
+                              elevation: 3,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '등록하기',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 30),
-                  _buildInputField(
-                    label: '상품이름',
-                    controller: _nameController,
-                    colors: colors,
-                    hintText: '상품 이름을 입력하세요',
-                  ),
-                  const SizedBox(height: 20),
-                  _buildInputField(
-                    label: '상품가격',
-                    controller: _priceController,
-                    colors: colors,
-                    keyboardType: TextInputType.number,
-                    hintText: '가격을 입력하세요',
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  ),
-                  const SizedBox(height: 20),
-                  _buildInputField(
-                    label: '상품설명',
-                    controller: _descriptionController,
-                    colors: colors,
-                    hintText: '상품 설명을 입력하세요',
-                    isExpanded: true,
-                  ),
-                  const SizedBox(height: 60),
-                  _buildSubmitButton(),
-                  const SizedBox(height: 60),
                 ],
               ),
             ),
@@ -335,20 +573,182 @@ class _ProductAddPageState extends State<ProductAddPage> {
       ),
     );
   }
-}
 
-class ThemeColors {
-  final Color containerColor;
-  final Color textColor;
-  final Color hintColor;
-  final Color imageAreaColor;
-  final Color imageIconColor;
+  Widget _buildImagePreviewSection(bool isDarkMode) {
+    return GestureDetector(
+      onTap: _showImageSourceDialog,
+      child: Container(
+        height: 350,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: isDarkMode ? PokemonColors.cardDark : PokemonColors.cardLight,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+          border: Border.all(
+            color: isDarkMode
+                ? PokemonColors.primaryBlue.withOpacity(0.3)
+                : PokemonColors.primaryRed.withOpacity(0.3),
+            width: 2,
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // 이미지 표시
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _image != null
+                      ? Image.file(
+                          _image!,
+                          fit: BoxFit.cover,
+                        )
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_photo_alternate_rounded,
+                                size: 70,
+                                color: isDarkMode
+                                    ? PokemonColors.primaryYellow
+                                        .withOpacity(0.7)
+                                    : PokemonColors.primaryRed.withOpacity(0.7),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                '이미지를 선택하세요',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDarkMode
+                                      ? Colors.white70
+                                      : Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
 
-  const ThemeColors({
-    required this.containerColor,
-    required this.textColor,
-    required this.hintColor,
-    required this.imageAreaColor,
-    required this.imageIconColor,
-  });
+              // 카메라 아이콘 오버레이
+              Positioned(
+                bottom: 16,
+                right: 16,
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: isDarkMode
+                        ? PokemonColors.primaryBlue.withOpacity(0.8)
+                        : PokemonColors.primaryRed.withOpacity(0.8),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.camera_alt_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    required IconData icon,
+    required bool isDarkMode,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+    int maxLines = 1,
+    String? prefix,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.black12 : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDarkMode
+              ? Colors.grey.withOpacity(0.3)
+              : Colors.grey.withOpacity(0.3),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        maxLines: maxLines,
+        style: TextStyle(
+          fontSize: 16,
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          prefixIcon: Icon(
+            icon,
+            color: isDarkMode
+                ? PokemonColors.primaryYellow
+                : PokemonColors.primaryRed,
+          ),
+          prefixText: prefix,
+          prefixStyle: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 16,
+          ),
+          labelStyle: TextStyle(
+            color: isDarkMode ? Colors.grey : Colors.grey[700],
+          ),
+          hintStyle: TextStyle(
+            color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Colors.transparent,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: isDarkMode
+                  ? PokemonColors.primaryYellow
+                  : PokemonColors.primaryRed,
+              width: 2,
+            ),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+        ),
+      ),
+    );
+  }
 }
