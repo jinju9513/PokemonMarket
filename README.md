@@ -2,26 +2,24 @@
 🧢 PokemonMarket
 </h1>
 <p align="center">
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
+  <img src="https://img.shields.io/badge/Provider-000000?style=for-the-badge&logo=provider&logoColor=white" alt="Provider">
 </p>
-  <img alt="브로셔 이미지" src=""/>
-  
-<table>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/39e4965a-1c77-43cf-a972-7da4832bb416" width="200"></td>
-    <td><img src="https://github.com/user-attachments/assets/846c891b-2b3d-4927-ae30-0214d5e3309d" width="200"></td>
-    <td><img src="https://github.com/user-attachments/assets/b35855ca-7425-42b0-bf3c-a167e6e47ffa" width="200"></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/8fc7c8da-ebf3-4613-bed0-f311f496eedc" width="200"></td>
-    <td><img src="https://github.com/user-attachments/assets/591f01f8-7ea2-4882-bea3-5bd785fa5e87" width="200"></td>
-    <td><img src="https://github.com/user-attachments/assets/e3777889-b92e-4a55-b6fa-8146d33cfeb2" width="200"></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/b9ad0240-898d-406e-af6b-f34a9424de21" width="200"></td>
-    <td><img src="https://github.com/user-attachments/assets/54438190-33fc-4be4-87a7-29b052d1b493" width="200"></td>
-    <td><img src="https://github.com/user-attachments/assets/1834e07e-4f92-43e4-b46a-d8811030032b" width="200"></td>
-  </tr>
-</table>
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/39e4965a-1c77-43cf-a972-7da4832bb416" width="200" style="margin: 10px">
+  <img src="https://github.com/user-attachments/assets/846c891b-2b3d-4927-ae30-0214d5e3309d" width="200" style="margin: 10px">
+  <img src="https://github.com/user-attachments/assets/b35855ca-7425-42b0-bf3c-a167e6e47ffa" width="200" style="margin: 10px">
+  <br>
+  <img src="https://github.com/user-attachments/assets/8fc7c8da-ebf3-4613-bed0-f311f496eedc" width="200" style="margin: 10px">
+  <img src="https://github.com/user-attachments/assets/591f01f8-7ea2-4882-bea3-5bd785fa5e87" width="200" style="margin: 10px">
+  <img src="https://github.com/user-attachments/assets/e3777889-b92e-4a55-b6fa-8146d33cfeb2" width="200" style="margin: 10px">
+  <br>
+  <img src="https://github.com/user-attachments/assets/b9ad0240-898d-406e-af6b-f34a9424de21" width="200" style="margin: 10px">
+  <img src="https://github.com/user-attachments/assets/54438190-33fc-4be4-87a7-29b052d1b493" width="200" style="margin: 10px">
+  <img src="https://github.com/user-attachments/assets/1834e07e-4f92-43e4-b46a-d8811030032b" width="200" style="margin: 10px">
+</div>
 
 ## 📌 프로젝트 개요
 
@@ -122,6 +120,79 @@ lib/
 | 🧾 장바구니         | 수량 조절, 삭제, 총 금액 확인    |
 | 🌗 테마 전환        | 다크 / 라이트 모드 토글          |
 | 📸 이미지 처리      | assets or File path 지원         |
+
+---
+
+## 🚀 주요 기술적 특징
+
+### 1. 상태 관리
+
+- Provider 패턴을 활용한 효율적인 상태 관리
+- 장바구니, 좋아요 등 사용자 상호작용 데이터 관리
+
+### 2. UI/UX
+
+- Material Design 3 기반의 모던한 디자인
+- 다크/라이트 모드 지원으로 사용자 편의성 향상
+- 애니메이션 효과를 통한 부드러운 사용자 경험
+
+### 3. 성능 최적화
+
+- const 키워드를 활용한 위젯 최적화
+- 이미지 캐싱 및 지연 로딩 구현
+- 불필요한 리빌드 방지를 통한 성능 개선
+
+### 4. 코드 품질
+
+- 일관된 코드 스타일과 네이밍 컨벤션
+- 재사용 가능한 컴포넌트 설계
+- 주석을 통한 코드 문서화
+
+---
+
+## 📱 앱 설치 및 실행 방법
+
+1. Flutter 개발 환경 설정
+
+```bash
+flutter doctor
+```
+
+2. 의존성 설치
+
+```bash
+flutter pub get
+```
+
+3. 앱 실행
+
+```bash
+flutter run
+```
+
+---
+
+## 🤝 기여 방법
+
+1. 이 저장소를 Fork합니다.
+2. 새로운 브랜치를 생성합니다 (`git checkout -b feature/amazing-feature`).
+3. 변경사항을 커밋합니다 (`git commit -m 'Add some amazing feature'`).
+4. 브랜치에 푸시합니다 (`git push origin feature/amazing-feature`).
+5. Pull Request를 생성합니다.
+
+---
+
+## 📄 라이센스
+
+이 프로젝트는 MIT 라이센스를 따릅니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
+---
+
+## 🙏 감사의 말
+
+- Flutter 팀에게 감사드립니다.
+- 모든 기여자분들께 감사드립니다.
+- 포켓몬 팬 여러분들께 감사드립니다.
 
 ---
 
