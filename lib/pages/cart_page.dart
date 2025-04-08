@@ -462,10 +462,24 @@ class _CartPageState extends State<CartPage>
                     ),
                     _buildQtyIconButton(
                       icon: Icons.add,
-                      onPressed: () => cartManager.updateQuantity(
-                        item,
-                        item.quantity + 1,
-                      ),
+                      onPressed: () {
+                        // 현재 수량이 최대 수량보다 작을 때만 증가 가능
+                        if (item.quantity < item.maxQuantity) {
+                          cartManager.updateQuantity(
+                            item,
+                            item.quantity + 1,
+                          );
+                        } else {
+                          // 재고 부족 메시지 표시
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('최대 구매 가능 수량은 ${item.maxQuantity}개입니다.'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
                       isDarkMode: isDarkMode,
                     ),
                   ],

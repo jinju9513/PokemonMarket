@@ -35,8 +35,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return price * _quantity;
   }
 
+  int _getAvailableQuantity() {
+    final cartManager = Provider.of<CartManager>(context, listen: false);
+    int stock = widget.product['quantity'] ?? 0;
+
+    // 현재 같은 상품이 장바구니에 있는지 확인
+    String productId = widget.product['id']?.toString() ?? '';
+    int cartQuantity = 0;
+
+    // 장바구니에서 현재 상품의 수량 확인
+    for (var item in cartManager.items) {
+      if (item.id == productId) {
+        cartQuantity = item.quantity;
+        break;
+      }
+    }
+    // 가용 수량 = 전체 재고 - 장바구니에 담긴 수량
+    return stock - cartQuantity;
+  }
+
   void _showAddToCartDialog(BuildContext context) {
     final cartManager = Provider.of<CartManager>(context, listen: false);
+    final availableQuantity = _getAvailableQuantity();
+
+    // 추가하려는 수량이 가용 수량보다 많으면 오류 메시지 표시
+    if (_quantity > availableQuantity) {
+      _showStockErrorDialog(context, availableQuantity);
+      return;
+    }
+
     cartManager
         .addItem(CartItem.fromProduct(widget.product, quantity: _quantity));
 
@@ -207,7 +234,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  void _showStockErrorDialog(BuildContext context) {
+  void _showStockErrorDialog(BuildContext context, [int? availableQuantity]) {
+    final available = availableQuantity ?? 0;
+
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -261,7 +290,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             : Colors.red.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.error_outline,
                         size: 50,
                         color: Colors.red,
@@ -282,7 +311,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                     // 내용
                     Text(
-                      '선택한 갯수가 재고보다 많습니다',
+                      availableQuantity != null && availableQuantity > 0
+                          ? '장바구니에 이미 일부 수량이 있습니다.\n현재 추가 가능한 수량은 $available개입니다.'
+                          : availableQuantity != null && availableQuantity == 0
+                              ? '이 상품은 장바구니에 모두 담겨 있습니다.'
+                              : '선택한 갯수가 재고보다 많습니다',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
@@ -585,7 +618,25 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ? Colors.white
                         : Colors.black,
                   ),
-                  onPressed: () => setState(() => _quantity++),
+                  onPressed: () {
+                    final availableQuantity = _getAvailableQuantity();
+                    // 현재 수량이 가용 수량보다 작을 때만 증가 가능
+                    if (_quantity < availableQuantity) {
+                      setState(() => _quantity++);
+                    } else {
+                      // 재고 부족 메시지 표시
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            availableQuantity > 0
+                                ? '추가 가능한 수량은 $availableQuantity개입니다.'
+                                : '이 상품은 장바구니에 모두 담겨 있습니다.',
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
                   padding: const EdgeInsets.all(4),
                   constraints:
                       const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -611,9 +662,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                int stock = widget.product['quantity'] ?? 0;
-                if (_quantity > stock) {
-                  _showStockErrorDialog(context);
+                final availableQuantity = _getAvailableQuantity();
+                if (_quantity > availableQuantity) {
+                  _showStockErrorDialog(context, availableQuantity);
                 } else {
                   _showAddToCartDialog(context);
                 }

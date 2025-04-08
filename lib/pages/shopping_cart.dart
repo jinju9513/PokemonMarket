@@ -6,6 +6,7 @@ class CartItem {
   final int price;
   final int quantity;
   final String imagePath;
+  final int maxQuantity; // 최대 구매 가능 수량 필드 추가
 
   CartItem({
     required this.id, // 필수 파라미터로 변경
@@ -13,6 +14,7 @@ class CartItem {
     required this.price,
     required this.quantity,
     required this.imagePath,
+    this.maxQuantity = 9999, // 필수 파라미터로 추가
   });
 
   int get totalPrice => price * quantity;
@@ -24,6 +26,7 @@ class CartItem {
       price: price,
       quantity: quantity ?? this.quantity,
       imagePath: imagePath,
+      maxQuantity: maxQuantity, // maxQuantity 유지
     );
   }
 
@@ -47,12 +50,15 @@ class CartItem {
     String id = product['id']?.toString() ??
         DateTime.now().millisecondsSinceEpoch.toString();
 
+    int maxQuantity = product['quantity'] ?? 9999;
+
     return CartItem(
-      id: id, // ID 설정
+      id: id,
       name: product['name'] ?? '제품명 없음',
       price: price,
       quantity: quantity,
       imagePath: imagePath,
+      maxQuantity: maxQuantity, // 최대 수량 설정
     );
   }
 
@@ -60,8 +66,6 @@ class CartItem {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! CartItem) return false;
-
-    // ID와 이름을 모두 비교하도록 수정
     return other.id == id;
   }
 
