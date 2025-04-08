@@ -24,8 +24,8 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       title: Image.asset(
-        'assets/pk.png', // 이미지 경로
-        height: 47, // 이미지 높이 조정 (필요에 따라 수정)
+        'assets/pk1.png', // 이미지 경로
+        height: 46, // 이미지 높이 조정 (필요에 따라 수정)
         fit: BoxFit.contain, // 이미지 비율 유지
       ),
       actions: [
