@@ -88,23 +88,22 @@ lib/
 ```
 
 ### 앱 디자인 설계
-
 <p align="center">
- <a href="">
-<img width="802" alt="image" src="">
+ <a href="https://www.figma.com/design/HCP42dNNPpo4oAKIfAQF4j/%EC%A3%BC%ED%8A%B9%EA%B8%B0-%EA%B8%B0%EC%B4%88-_4%EC%A1%B0?node-id=0-1&p=f&t=zW99etInZgrlV73C-0">
+<img width="802" alt="image" src="https://github.com/user-attachments/assets/c4232250-30df-4f8b-8696-6b4e9a5488cf">
 </p>
 
 ### 역할 분담
 
-**이정찬** :
+**이정찬** : 카드 트레이드 등록 페이지
 
-**전진주** :
+**전진주** : 카드트레이드 리스트 페이지
 
-**이성엽** :
+**이성엽** : 상품 등록 페이지
 
-**이인혁** :
+**이인혁** : 상품 목록 페이지, 상품 상세 페이지
 
-**유제형** :
+**유제형** : 장바구니 페이지
 
 <br/>
 
@@ -198,8 +197,3 @@ flutter run
 
 <br/>
 
-## TroubleShooting
-
-<br/>
-
-## 유지보수 및 개선사항
