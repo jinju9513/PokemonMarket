@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_market/widgets/common_text.dart';
 
-// 공통 앱바 위젯 정의
 class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDarkMode; // 다크 모드 여부
   final VoidCallback toggleTheme; // 테마 전환 콜백
@@ -25,9 +23,10 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onBackPressed,
             )
           : null,
-      title: const CommonText(
-        text: 'POKE',
-        fontSize: 24,
+      title: Image.asset(
+        'assets/pk.png', // 이미지 경로
+        height: 47, // 이미지 높이 조정 (필요에 따라 수정)
+        fit: BoxFit.contain, // 이미지 비율 유지
       ),
       actions: [
         // 테마 전환 버튼 (다크/라이트 모드 전환)

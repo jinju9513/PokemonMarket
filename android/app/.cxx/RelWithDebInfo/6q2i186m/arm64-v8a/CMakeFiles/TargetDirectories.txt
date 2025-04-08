@@ -1,0 +1,2 @@
+D:/PokemonMarket/android/app/.cxx/RelWithDebInfo/6q2i186m/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/PokemonMarket/android/app/.cxx/RelWithDebInfo/6q2i186m/arm64-v8a/CMakeFiles/rebuild_cache.dir
