@@ -217,13 +217,17 @@ class _CardExchangePageState extends State<CardExchangePage> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context, {
-                              'userName': _nameController.text,
-                              'desiredCards': selectedDesiredCards,
-                              'ownedCards': selectedOwnedCards,
-                            });
-                          },
+                          onPressed: _nameController.text.isNotEmpty &&
+                                  selectedDesiredCards.isNotEmpty &&
+                                  selectedOwnedCards.isNotEmpty
+                              ? () {
+                                  Navigator.pop(context, {
+                                    'userName': _nameController.text,
+                                    'desiredCards': selectedDesiredCards,
+                                    'ownedCards': selectedOwnedCards,
+                                  });
+                                }
+                              : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isDarkMode
                                 ? PokemonColors.primaryBlue
@@ -235,13 +239,25 @@ class _CardExchangePageState extends State<CardExchangePage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
+                            disabledBackgroundColor: isDarkMode
+                                ? Colors.grey[800]
+                                : Colors.grey[300],
+                            disabledForegroundColor: isDarkMode
+                                ? Colors.grey[600]
+                                : Colors.grey[500],
                           ),
                           child: Text(
                             '등록하기',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                              color: _nameController.text.isNotEmpty &&
+                                      selectedDesiredCards.isNotEmpty &&
+                                      selectedOwnedCards.isNotEmpty
+                                  ? (isDarkMode ? Colors.white : Colors.black)
+                                  : (isDarkMode
+                                      ? Colors.grey[600]
+                                      : Colors.grey[500]),
                             ),
                           ),
                         ),
