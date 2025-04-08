@@ -159,6 +159,9 @@ class _CardExchangePageState extends State<CardExchangePage> {
                         hintText: '닉네임을 입력하세요',
                         icon: Icons.person_outline_rounded,
                         isDarkMode: isDarkMode,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                       ),
                       const SizedBox(height: 24),
 
@@ -280,6 +283,7 @@ class _CardExchangePageState extends State<CardExchangePage> {
     required String hintText,
     required IconData icon,
     required bool isDarkMode,
+    required ValueChanged<String> onChanged,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -300,6 +304,7 @@ class _CardExchangePageState extends State<CardExchangePage> {
       ),
       child: TextFormField(
         controller: controller,
+        onChanged: onChanged,
         style: TextStyle(
           fontSize: 16,
           color: isDarkMode ? Colors.white : Colors.black,
