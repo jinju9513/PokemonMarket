@@ -625,16 +625,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       setState(() => _quantity++);
                     } else {
                       // 재고 부족 메시지 표시
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            availableQuantity > 0
-                                ? '추가 가능한 수량은 $availableQuantity개입니다.'
-                                : '이 상품은 장바구니에 모두 담겨 있습니다.',
-                          ),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
+                      _showStockErrorDialog(context, availableQuantity);
                     }
                   },
                   padding: const EdgeInsets.all(4),

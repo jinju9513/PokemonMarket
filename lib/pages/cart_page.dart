@@ -463,21 +463,13 @@ class _CartPageState extends State<CartPage>
                     _buildQtyIconButton(
                       icon: Icons.add,
                       onPressed: () {
-                        // 현재 수량이 최대 수량보다 작을 때만 증가 가능
                         if (item.quantity < item.maxQuantity) {
                           cartManager.updateQuantity(
                             item,
                             item.quantity + 1,
                           );
                         } else {
-                          // 재고 부족 메시지 표시
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text('최대 구매 가능 수량은 ${item.maxQuantity}개입니다.'),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
+                          _showStockErrorDialog(context, item.maxQuantity);
                         }
                       },
                       isDarkMode: isDarkMode,
@@ -833,6 +825,125 @@ class _CartPageState extends State<CartPage>
                         Navigator.of(context).pop();
                         cartManager.clearCart(); // 장바구니 비우기
                       },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isDarkMode
+                              ? PokemonColors.primaryBlue
+                              : PokemonColors.primaryYellow,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '확인',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showStockErrorDialog(BuildContext context, int maxQuantity) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
+      barrierLabel: 'dismiss',
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: Dialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                width: 300,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? PokemonColors.cardDark
+                      : PokemonColors.cardLight,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: isDarkMode
+                        ? PokemonColors.primaryBlue.withOpacity(0.3)
+                        : PokemonColors.primaryRed.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 경고 아이콘
+                    Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? Colors.red.withOpacity(0.1)
+                            : Colors.red.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.error_outline,
+                        size: 50,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // 제목
+                    Text(
+                      '구매할 수 없습니다',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // 내용
+                    Text(
+                      '최대 구매 가능 수량은 $maxQuantity개입니다.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isDarkMode ? Colors.white70 : Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 확인 버튼
+                    InkWell(
+                      onTap: () => Navigator.of(context).pop(),
                       borderRadius: BorderRadius.circular(10),
                       child: Container(
                         width: double.infinity,
